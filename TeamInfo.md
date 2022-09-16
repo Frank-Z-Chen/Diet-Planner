@@ -12,7 +12,7 @@
 | Member1     |   hj28@illinois.edu    |
 | Member2     |       Siwei Zhang      |
 | Member2     |   siwei4@illinois.edu  |
-| Member3     |           zc56         |
+| Member3     |         Zhaokuan Chen  |
 | Member3     |   zc56@illinois.edu    |
 
 ## Project Information
