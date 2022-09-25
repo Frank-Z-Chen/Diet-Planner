@@ -19,10 +19,10 @@
 
 |   Info      |        Description     |
 | ----------- | ---------------------- |
-|  Title      |       ProjectTitle     |
+|  Title      |       Diet Planner     |
 | System URL  |      link_to_system    |
 | Video Link  |      link_to_video     |
 
 ## Project Summary
 
-This is a summary of the project!
+This project is a relational database-centric web application. The primary tech stack for this project includes Node.js, React, Redux, Express.js and MangoDB. React and Redux will be utilized to achieve the front-end functionality that acquire users’ requests, Express.js are used to bridge the HTTP traffic across different internal application services while MangoDB are used to build application databases and manage database- related functionality. All the services of the application will be on node.js runtime environment
