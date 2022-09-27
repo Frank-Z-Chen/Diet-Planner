@@ -25,4 +25,4 @@
 
 ## Project Summary
 
-This project is a relational database-centric web application. The primary tech stack for this project includes Node.js, React, Redux, Express.js and MangoDB. React and Redux will be utilized to achieve the front-end functionality that acquire users’ requests, Express.js are used to bridge the HTTP traffic across different internal application services while MangoDB are used to build application databases and manage database- related functionality. All the services of the application will be on node.js runtime environment
+This project is a relational database-centric web application. The primary tech stack for this project includes Node.js, React, Redux, Google Cloud Platform and Django. React and Redux will be utilized to achieve the front-end functionality that acquire users’ requests, Django is used to communicate the frontend and the database while GCP is used to realize application databases and manage database-related functionality.
