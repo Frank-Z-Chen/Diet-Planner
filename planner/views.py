@@ -28,5 +28,5 @@ def show_foods(request):
 def show_food_detail(request, id):
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM Food WHERE foodId = %s", [id])
-    r = cursor.fetchone()
+    r = dictfetchall(cursor)
     return Response(r)
