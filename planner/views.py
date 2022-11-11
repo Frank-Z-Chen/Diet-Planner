@@ -46,14 +46,14 @@ def food_detail(request, id):
                 raise Food.DoesNotExist
             return Response(qs_json)
         elif request.method == 'PATCH':
-            food = get_object_or_404(Food, pk=id)
-            serializer = FoodSerializer(food, data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
+            #food = get_object_or_404(Food, pk=id)
+            serializer = FoodSerializer(data=request.data)
+            serializer.is_valid()
+            #serializer.save()
             # print(serializer.data)
-            # data=serializer.validated_data
-            # cursor = connection.cursor()
-            # cursor.execute("UPDATE Food SET foodName = %s, fat = %s, protein = %s, carb = %s WHERE foodId = %s", [data['foodname'], data['fat'], data['protein'], data['carb'], data['foodid']]) 
+            data=serializer.data#validated_data
+            cursor = connection.cursor()
+            cursor.execute("UPDATE Food SET foodName = %s, fat = %s, protein = %s, carb = %s WHERE foodId = %s", [data['foodname'], data['fat'], data['protein'], data['carb'], data['foodid']]) 
             return Response(serializer.data, status=status.HTTP_200_OK)
     except Food.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
