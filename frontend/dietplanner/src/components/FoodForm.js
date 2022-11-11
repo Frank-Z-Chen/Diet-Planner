@@ -9,7 +9,8 @@ const FoodForm = props => {
  const [fat, setFat] = useState(null);
  const [protein, setProtein] = useState(null);
  
-  useEffect(() => {
+ /* 
+ useEffect(() => {
     if (this.props.food) {
       const { name, carb, fat, protein } = this.props.food;
       setName(name);
@@ -17,12 +18,12 @@ const FoodForm = props => {
       setFat(fat);
       setProtein(protein);
   };
-
+  */
 
   const createStudent = e => {
     e.preventDefault();
-    this.props.resetState();
-    this.props.toggle();
+    //this.props.resetState();
+    //this.props.toggle();
     /*axios.post(API_URL, this.state).then(() => {
       this.props.resetState();
       this.props.toggle();
@@ -32,8 +33,8 @@ const FoodForm = props => {
 
   const editStudent = e => {
     e.preventDefault();
-    this.props.resetState();
-    this.props.toggle();
+    //this.props.resetState();
+    //this.props.toggle();
     /*axios.put(API_URL + this.state.pk, this.state).then(() => {
       this.props.resetState();
       this.props.toggle();
@@ -41,14 +42,12 @@ const FoodForm = props => {
     console.log("edit request send");
   };
 
-
-});
-
  return (
-    <form onSubmit={this.props.student ? 
+    /*<form onSubmit={this.props.student ? 
       handleSubmit(data => {this.editStudent(data)} )
       :handleSubmit(data => {this.createStudent(data)}) 
-    }>
+    }>*/
+    <form onSubmit = {handleSubmit(data => console.log(data))}>
 
      <h1>New Food</h1>
      <label>Name</label>
@@ -58,10 +57,13 @@ const FoodForm = props => {
      <input name="carb" {...register("carb", {required: "Required",})}/>
 
      <label>Fat</label>
-     <input name="fat" {...register("carb", {required: "Required",})}/>
+     <input name="fat" {...register("fat", {required: "Required",})}/>
     
      <label>Protein</label>
      <input name="protein" {...register("protein", {required: "Required",})}/>
+     
+     <label>Submit</label>
+     <input type="submit" />
 
      {/*
      <label>Total Weight</label>
