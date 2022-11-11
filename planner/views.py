@@ -35,9 +35,9 @@ def show_foods(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view(['GET','PUT', 'PATCH'])
+@api_view(['GET','PATCH', 'DELETE'])
 def food_detail(request, id):
-
+    cursor = connection.cursor()
     try:
         qs = Food.objects.raw("SELECT * FROM Food WHERE foodId = %s", [id])
         if request.method == 'GET':
@@ -52,9 +52,12 @@ def food_detail(request, id):
             #serializer.save()
             # print(serializer.data)
             data=serializer.data#validated_data
-            cursor = connection.cursor()
             cursor.execute("UPDATE Food SET foodName = %s, fat = %s, protein = %s, carb = %s WHERE foodId = %s", [data['foodname'], data['fat'], data['protein'], data['carb'], data['foodid']]) 
             return Response(serializer.data, status=status.HTTP_200_OK)
+        elif request.method == 'DELETE':
+            
+            cursor.execute("DELETE FROM Food WHERE foodId = %s", [id])
+            return Response(status=status.HTTP_204_NO_CONTENT)
     except Food.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     # try:
