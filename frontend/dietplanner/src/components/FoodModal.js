@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
-import FoodForm from "/FoodForm";
+import FoodForm from "./FoodForm"
 
 class FoodModal extends Component {
     state = {

@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useForm } from "react-hook-form";
 import '../style/FoodForm.css';
 
@@ -19,7 +19,7 @@ const FoodForm = props => {
   };
 
 
-  createStudent = e => {
+  const createStudent = e => {
     e.preventDefault();
     this.props.resetState();
     this.props.toggle();
@@ -30,7 +30,7 @@ const FoodForm = props => {
     console.log("create request send");
   };
 
-  editStudent = e => {
+  const editStudent = e => {
     e.preventDefault();
     this.props.resetState();
     this.props.toggle();
@@ -46,8 +46,8 @@ const FoodForm = props => {
 
  return (
     <form onSubmit={this.props.student ? 
-      handleSubmit(data => editStudent(data))
-      :handleSubmit(data => createStudent(data)) 
+      handleSubmit(data => {this.editStudent(data)} )
+      :handleSubmit(data => {this.createStudent(data)}) 
     }>
 
      <h1>New Food</h1>
@@ -67,8 +67,8 @@ const FoodForm = props => {
      <label>Total Weight</label>
      <input name="weight" {...register("weight", {required: "Required",})}/>
      */}
-
-     <input type="submit" />
    </form>
  );
 }
+
+export default FoodForm;
