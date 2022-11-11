@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.db import connection
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager
 
 class Food(models.Model):
@@ -37,7 +38,7 @@ class Goalmadebyuser(models.Model):
 
 class Recipe(models.Model):
     recipeid = models.IntegerField(db_column='recipeId', primary_key=True)  # Field name made lowercase.
-    recipename = models.CharField(db_column='recipeName', max_length=255)  # Field name made lowercase.
+    recipename = models.CharField(db_column='recipeName', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -54,35 +55,21 @@ class Usefood(models.Model):
         db_table = 'UseFood'
         unique_together = (('recipeid', 'foodid'),)
 
-
 class CustomAccountManager(BaseUserManager):
-    def create_superuser(self, email, age, gender, password, username, **other_fields):
-        other_fields.setdefault('is_staff', True)
-        other_fields.setdefault('is_superuser', True)
-        other_fields.setdefault('is_active', True)
-        return self.create_user(email, age, gender, password, username, **other_fields)    
-    
-    
-    
-    def create_user(self, email, age, gender, password, username, **other_fields):
+
+    def create_user(self, email, username, password, age, gender, is_superuser=False):
         email = self.normalize_email(email)
-        user = self.model(email=email, age=age, gender=gender, username=username, **other_fields)
+        user = self.model(email=self.normalize_email(email), username=username, age=age, gender=gender)
         user.set_password(password)
-        user.save()
+        user.superuser = is_superuser
+        user.save(using=self._db)
         return user
 
 
-# class User(models.Model):
-#     userid = models.IntegerField(db_column='userId', primary_key=True)  # Field name made lowercase.
-#     username = models.CharField(db_column='userName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-#     email = models.CharField(max_length=255, blank=True, null=True)
-#     age = models.IntegerField(blank=True, null=True)
-#     gender = models.CharField(max_length=10, blank=True, null=True)
-#     password = models.CharField(max_length=30, blank=True, null=True)
+    def create_superuser(self, email, username, password, age, gender):
+        user = self.create_user(email, username, password, age, gender, is_superuser=True)
+        return user   
 
-#     class Meta:
-#         managed = False
-#         db_table = 'User'
 
 class User(AbstractUser, PermissionsMixin):
     userid = models.IntegerField(db_column='userId', primary_key=True)  # Field name made lowercase.
@@ -91,17 +78,23 @@ class User(AbstractUser, PermissionsMixin):
     age = models.IntegerField(blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True, null=True)
     password = models.CharField(max_length=255, blank=True, null=True)
-    
+    superuser = models.BooleanField(default=False)
 
-    objects= CustomAccountManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'password', 'age', 'gender']
 
-    def __str__(self):
-        return self.username
+    objects= CustomAccountManager()
 
+    @property
+    def is_staff(self):
+        return self.superuser
+
+    @property
+    def is_superuser(self):
+        return self.superuser
+    
     class Meta:
-        managed = False
+        managed = True
         db_table = 'User'
 
 
@@ -113,36 +106,6 @@ class Weeklyplan(models.Model):
     class Meta:
         managed = False
         db_table = 'WeeklyPlan'
-
-
-class AuthGroup(models.Model):
-    name = models.CharField(unique=True, max_length=150)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_group'
-
-
-class AuthGroupPermissions(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
-    permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_group_permissions'
-        unique_together = (('group', 'permission'),)
-
-
-class AuthPermission(models.Model):
-    name = models.CharField(max_length=255)
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
-    codename = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_permission'
-        unique_together = (('content_type', 'codename'),)
 
 
 class Contains(models.Model):
@@ -173,24 +136,3 @@ class Decide(models.Model):
         managed = False
         db_table = 'decide'
         unique_together = (('userid', 'planid'),)
-
-
-class DjangoContentType(models.Model):
-    app_label = models.CharField(max_length=100)
-    model = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'django_content_type'
-        unique_together = (('app_label', 'model'),)
-
-
-class DjangoMigrations(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    app = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
-    applied = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'django_migrations'
