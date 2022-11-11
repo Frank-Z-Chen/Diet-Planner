@@ -30,6 +30,7 @@ def show_foods(request):
 
 @api_view()
 def show_food_detail(request, id):
+
     try:
         sql = "SELECT * FROM Food WHERE foodId = %s"
         qs = Food.objects.raw(sql, [id])
@@ -56,3 +57,9 @@ def show_food_detail(request, id):
 #     r = dictfetchall(cursor)
     
 #     return Response(r)
+
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM Food WHERE foodId = %s", [id])
+    r = cursor.fetchone()
+    return Response(r)
+
