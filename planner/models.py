@@ -9,8 +9,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager
 
 class Food(models.Model):
-    foodid = models.CharField(db_column='foodId', primary_key=True, max_length=30)  # Field name made lowercase.
-    foodname = models.CharField(db_column='foodName', max_length=30, blank=True, null=True)  # Field name made lowercase.
+    foodid = models.IntegerField(db_column='foodId', primary_key=True)  # Field name made lowercase.
+    foodname = models.CharField(db_column='foodName', max_length=30)  # Field name made lowercase.
     fat = models.FloatField(blank=True, null=True)
     protein = models.FloatField(blank=True, null=True)
     carb = models.FloatField(blank=True, null=True)
@@ -21,7 +21,7 @@ class Food(models.Model):
 
 
 class Goalmadebyuser(models.Model):
-    goalid = models.CharField(db_column='goalId', primary_key=True, max_length=30)  # Field name made lowercase.
+    goalid = models.IntegerField(db_column='goalId', primary_key=True)  # Field name made lowercase.
     userid = models.ForeignKey('User', models.DO_NOTHING, db_column='userId', blank=True, null=True)  # Field name made lowercase.
     fat = models.FloatField(blank=True, null=True)
     protein = models.FloatField(blank=True, null=True)
@@ -36,13 +36,23 @@ class Goalmadebyuser(models.Model):
 
 
 class Recipe(models.Model):
-    recipeid = models.CharField(db_column='recipeId', primary_key=True, max_length=30)  # Field name made lowercase.
-    recipename = models.CharField(db_column='recipeName', max_length=30, blank=True, null=True)  # Field name made lowercase.
-    userid = models.CharField(db_column='userId', max_length=30, blank=True, null=True)  # Field name made lowercase.
+    recipeid = models.IntegerField(db_column='recipeId', primary_key=True)  # Field name made lowercase.
+    recipename = models.CharField(db_column='recipeName', max_length=255)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'Recipe'
+
+
+class Usefood(models.Model):
+    recipeid = models.OneToOneField(Recipe, models.DO_NOTHING, db_column='recipeId', primary_key=True)  # Field name made lowercase.
+    foodid = models.ForeignKey(Food, models.DO_NOTHING, db_column='foodId')  # Field name made lowercase.
+    weight = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'UseFood'
+        unique_together = (('recipeid', 'foodid'),)
 
 
 class CustomAccountManager(BaseUserManager):
@@ -62,14 +72,26 @@ class CustomAccountManager(BaseUserManager):
         return user
 
 
+# class User(models.Model):
+#     userid = models.IntegerField(db_column='userId', primary_key=True)  # Field name made lowercase.
+#     username = models.CharField(db_column='userName', max_length=255, blank=True, null=True)  # Field name made lowercase.
+#     email = models.CharField(max_length=255, blank=True, null=True)
+#     age = models.IntegerField(blank=True, null=True)
+#     gender = models.CharField(max_length=10, blank=True, null=True)
+#     password = models.CharField(max_length=30, blank=True, null=True)
+
+#     class Meta:
+#         managed = False
+#         db_table = 'User'
 
 class User(AbstractUser, PermissionsMixin):
-    userid = models.CharField(db_column='userId', primary_key=True, max_length=30)  # Field name made lowercase.
+    userid = models.IntegerField(db_column='userId', primary_key=True)  # Field name made lowercase.
+    username = models.CharField(db_column='userName', max_length=255, blank=True, null=True)  # Field name made lowercase.
     email = models.CharField(unique=True, max_length=255, blank=True, null=True)
     age = models.IntegerField(blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True, null=True)
     password = models.CharField(max_length=255, blank=True, null=True)
-    username = models.CharField(db_column='userName', max_length=30, blank=True, null=True)  # Field name made lowercase.
+    
 
     objects= CustomAccountManager()
     USERNAME_FIELD = 'email'
@@ -79,17 +101,48 @@ class User(AbstractUser, PermissionsMixin):
         return self.username
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'User'
 
 
 class Weeklyplan(models.Model):
-    planid = models.CharField(db_column='planID', primary_key=True, max_length=30)  # Field name made lowercase.
-    createuserid = models.CharField(db_column='createUserId', max_length=30, blank=True, null=True)  # Field name made lowercase.
+    planid = models.IntegerField(db_column='planID', primary_key=True)  # Field name made lowercase.
+    creatuserid = models.IntegerField(db_column='creatUserId', blank=True, null=True)  # Field name made lowercase.
+    createusername = models.CharField(db_column='createUserName', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'WeeklyPlan'
+
+
+class AuthGroup(models.Model):
+    name = models.CharField(unique=True, max_length=150)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_group'
+
+
+class AuthGroupPermissions(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
+    permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_group_permissions'
+        unique_together = (('group', 'permission'),)
+
+
+class AuthPermission(models.Model):
+    name = models.CharField(max_length=255)
+    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
+    codename = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_permission'
+        unique_together = (('content_type', 'codename'),)
 
 
 class Contains(models.Model):
@@ -122,12 +175,22 @@ class Decide(models.Model):
         unique_together = (('userid', 'planid'),)
 
 
-class Usefood(models.Model):
-    recipeid = models.OneToOneField(Recipe, models.DO_NOTHING, db_column='recipeId', primary_key=True)  # Field name made lowercase.
-    foodid = models.ForeignKey(Food, models.DO_NOTHING, db_column='foodId')  # Field name made lowercase.
-    weight = models.FloatField(blank=True, null=True)
+class DjangoContentType(models.Model):
+    app_label = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
 
     class Meta:
         managed = False
-        db_table = 'useFood'
-        unique_together = (('recipeid', 'foodid'),)
+        db_table = 'django_content_type'
+        unique_together = (('app_label', 'model'),)
+
+
+class DjangoMigrations(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    app = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    applied = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_migrations'
