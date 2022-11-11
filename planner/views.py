@@ -1,4 +1,5 @@
 from django.db import connection
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -27,22 +28,33 @@ def show_foods(request):
             serializer.is_valid(raise_exception=True)
             data=serializer.validated_data
             cursor = connection.cursor()
-            cursor.execute("INSERT INTO Food VALUES(%s, %s, %s, %s, %s)", [data['foodid'], data['foodname'], data['fat'], data['protein'], data['carb']])  #these 3 lines can be directly replaced by serializer.save()
-            #serializer.save()　　　　　　　
-            return Response('OK')
+            cursor.execute("INSERT INTO Food VALUES(%s, %s, %s, %s, %s)", [data['foodid'], data['foodname'], data['fat'], data['protein'], data['carb']]) 
+            #these 3 lines can be directly replaced by serializer.save()　
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
     except Food.DoesNotExist:
-        return Response(status=404)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view()
-def show_food_detail(request, id):
+@api_view(['GET','PUT', 'PATCH'])
+def food_detail(request, id):
 
     try:
         qs = Food.objects.raw("SELECT * FROM Food WHERE foodId = %s", [id])
-        qs_json = FoodSerializer(qs, many = True).data
-        if not qs_json:
-            raise Food.DoesNotExist
-        return Response(qs_json)
+        if request.method == 'GET':
+            qs_json = FoodSerializer(qs, many = True).data
+            if not qs_json:
+                raise Food.DoesNotExist
+            return Response(qs_json)
+        elif request.method == 'PATCH':
+            food = get_object_or_404(Food, pk=id)
+            serializer = FoodSerializer(food, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            # print(serializer.data)
+            # data=serializer.validated_data
+            # cursor = connection.cursor()
+            # cursor.execute("UPDATE Food SET foodName = %s, fat = %s, protein = %s, carb = %s WHERE foodId = %s", [data['foodname'], data['fat'], data['protein'], data['carb'], data['foodid']]) 
+            return Response(serializer.data, status=status.HTTP_200_OK)
     except Food.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     # try:
