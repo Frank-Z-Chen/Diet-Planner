@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from planner.models import *
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from .serializers import FoodSerializer
 
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
@@ -15,18 +16,22 @@ def dictfetchall(cursor):
 
 @api_view()
 def show_foods(request):
-    # cursor = connection.cursor()
-    # cursor.execute("SELECT count(*) FROM Food")
-    # r = cursor.fetchone()
-
-    #Food.objects.raw('SELECT foodName, fat, protein, carb FROM Food')
-    
-    return Response('OK')
+    qs = Food.objects.raw("SELECT * FROM Food")
+    qs_json = FoodSerializer(qs, many = True).data
+    return Response(qs_json)
 
 
 @api_view()
 def show_food_detail(request, id):
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM Food WHERE foodId = %s", [id])
-    r = dictfetchall(cursor)
-    return Response(r)
+    qs = Food.objects.raw("SELECT * FROM Food WHERE foodId = %s", [id])
+    qs_json = FoodSerializer(qs, many = True).data
+    return Response(qs_json)
+
+
+# @api_view()
+# def show_food_detail(request, id):
+#     cursor = connection.cursor()
+#     cursor.execute("SELECT * FROM Food WHERE foodId = %s", [id])
+#     r = dictfetchall(cursor)
+    
+#     return Response(r)
