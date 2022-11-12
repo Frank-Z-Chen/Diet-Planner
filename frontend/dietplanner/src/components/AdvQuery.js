@@ -34,7 +34,7 @@ const AdvQuery = e => {
     return(
         <div>
             <form onSubmit={onFormSubmit}>
-                <h1>caloriecal</h1>
+                <h1>Calorie Consumption for People at Different Ages</h1>
 
                 <label>Gender</label>
                 <input name="gender" {...register("gender", {required: "Required",})} onChange={(e) => setGender(e.target.value) } />
