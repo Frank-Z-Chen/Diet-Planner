@@ -88,21 +88,22 @@ def food_detail(request, id):
 
 
 
-@api_view()
+@api_view(['PATCH'])
 def avg_cal_for_diff_age_in_range(request):
     SQL = "SELECT age, avg(calories) FROM GoalMadeByUser NATURAL JOIN (Select age, userId From User WHERE gender = %s AND age <= %s AND age >= %s) AS temp GROUP BY age ORDER BY age;"
     try:
-        print(request.data)
-        # serializer = FoodSerializer(data=request.data)
-        # serializer.is_valid()
-        # data=serializer.data
-        cursor = connection.cursor()
-        data = request.data
-        cursor.execute(SQL, [data['gender'], data['age_upperbound'], data['age_lowerbound']])
-        r = dictfetchall(cursor)
-        if not r:
-            raise ObjectDoesNotExist
-        return Response(r)
+        if request.method == 'PATCH':
+            print(request.data)
+            # serializer = FoodSerializer(data=request.data)
+            # serializer.is_valid()
+            # data=serializer.data
+            cursor = connection.cursor()
+            data = request.data
+            cursor.execute(SQL, [data['gender'], data['age_upperbound'], data['age_lowerbound']])
+            r = dictfetchall(cursor)
+            if not r:
+                raise ObjectDoesNotExist
+            return Response(r)
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
