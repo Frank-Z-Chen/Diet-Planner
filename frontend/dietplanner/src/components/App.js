@@ -1,6 +1,5 @@
 import React from "react";
-import FoodForm from "./FoodForm";
-import FoodFormUpdate from "./FoodFormUpdate";
+import AvgCalories from "./AvgCalories";
 import Home from "./Home";
 
 class App extends React.Component {
@@ -9,12 +8,10 @@ class App extends React.Component {
     return (
       <div>
         <Home />
-        <FoodForm
+        <AvgCalories
           //resetState = { }
           //toggle= {true}
           //foods = {[]}
-        />
-        <FoodFormUpdate
         />
       </div>
     );
