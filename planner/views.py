@@ -108,17 +108,19 @@ def avg_cal_for_diff_age_in_range(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view()
+@api_view(['PATCH'])
 def total_recipe_cal(request):
     SQL = "SELECT r.recipeName AS Recipe_Name, SUM(f.UnitKcal * u.weight) AS Total_Calories FROM Recipe r NATURAL JOIN UseFood u JOIN (SELECT foodId, (fat*9+protein*4+carb*4) AS UnitKcal FROM Food) AS f ON u.foodId = f.foodId WHERE r.recipeName = %s GROUP BY u.recipeId;"
+    
     try:
-        print(request.data)
-        cursor = connection.cursor()
-        data = request.data
-        cursor.execute(SQL, [data['recipename']])
-        r = dictfetchall(cursor)
-        if not r:
-            raise ObjectDoesNotExist
-        return Response(r)
+        if request.method == 'PATCH':
+            print(request.data)
+            cursor = connection.cursor()
+            data = request.data
+            cursor.execute(SQL, [data['recipename']])
+            r = dictfetchall(cursor)
+            if not r:
+                raise ObjectDoesNotExist
+            return Response(r)
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)

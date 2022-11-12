@@ -18,7 +18,10 @@ class Home extends Component {
     await axios.get('http://localhost:8000/planner/foods/')
     .then(res =>{ this.setState({foods : res.data});
     })
+    console.log(this.state.foods);
   };
+
+  
 
   resetState = () => {
     this.getFoods();

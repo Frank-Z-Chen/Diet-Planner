@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import '../style/FoodForm.css';
 import { Label } from "reactstrap";
+import Box from '@mui/material/Box';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 const AdvQuery = e => {
     const {register, handleSubmit } = useForm();
@@ -10,11 +12,11 @@ const AdvQuery = e => {
     const [_maxage, setMaxage] = useState(0);
     const [_minage, setMinage] = useState(0);
     const [_result, setResult] = useState([]);
-    
-    useEffect(() => {
-        _result
-    });
 
+    const listItems = _result.map( (item) => (
+        <li> Age: {item.age} Kcal: {item.Average_Kal}</li>
+    ));
+    
     const onFormSubmit = async(e) =>{
         e.preventDefault();
         const data = {
@@ -25,40 +27,29 @@ const AdvQuery = e => {
         console.log(data);
 
         const response = await axios.patch('http://localhost:8000/planner/caloriecal/',data);
-        //console.log(response.data);
+        console.log(response.data);
         setResult(response.data);
-        console.log(_result+"asd")
-        {/*const result_data = response.data.map(apiData => ({
-            age: apiData.age,
-            avg: apiData.Average_Kal,
-          }));
-        */}
-
-        //setResult(result_data);
-        //console.log(_result);
     };
 
     return(
-        <form onSubmit={onFormSubmit}>
-            <h1>caloriecal</h1>
+        <div>
+            <form onSubmit={onFormSubmit}>
+                <h1>caloriecal</h1>
 
-            <label>Gender</label>
-            <input name="gender" {...register("gender", {required: "Required",})} onChange={(e) => setGender(e.target.value) } />
+                <label>Gender</label>
+                <input name="gender" {...register("gender", {required: "Required",})} onChange={(e) => setGender(e.target.value) } />
 
-            <label>Max Age</label>
-            <input type='number' name="maxage" {...register("maxage", {required: "Required",})} onChange={(e) => setMaxage(e.target.value) } />
+                <label>Max Age</label>
+                <input type='number' name="maxage" {...register("maxage", {required: "Required",})} onChange={(e) => setMaxage(e.target.value) } />
 
-            <label>Min. Age</label>
-            <input type='number' name="minage" {...register("minage", {required: "Required",})} onChange={(e) => setMinage(e.target.value) } />
+                <label>Min. Age</label>
+                <input type='number' name="minage" {...register("minage", {required: "Required",})} onChange={(e) => setMinage(e.target.value) } />
 
-            <input type="submit" />
-            <ul>
-                {
-                    _result.
-                }
-            </ul>
-        </form>
+                <input type="submit" />
 
+                {listItems}
+            </form>
+        </div>    
     );
 };
 
