@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from planner.models import *
 from .serializers import FoodSerializer
+from django.core.exceptions import ObjectDoesNotExist
 
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
@@ -47,13 +48,13 @@ def food_detail(request, id):
             return Response(qs_json)
         elif request.method == 'PATCH':
             #food = get_object_or_404(Food, pk=id)
-            serializer = FoodSerializer(data=request.data)
-            serializer.is_valid()
+            # serializer = FoodSerializer(data=request.data)
+            # serializer.is_valid()
             #serializer.save()
             # print(serializer.data)
-            data=serializer.data#validated_data
+            data=request.data#validated_data
             cursor.execute("UPDATE Food SET foodName = %s, fat = %s, protein = %s, carb = %s WHERE foodId = %s", [data['foodname'], data['fat'], data['protein'], data['carb'], data['foodid']]) 
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(request.data, status=status.HTTP_200_OK)
         elif request.method == 'DELETE':
             
             cursor.execute("DELETE FROM Food WHERE foodId = %s", [id])
@@ -83,3 +84,23 @@ def food_detail(request, id):
     r = cursor.fetchone()
     return Response(r)
 
+
+
+
+@api_view()
+def avg_cal_for_each_age(request):
+    SQL = "SELECT age, avg(calories) FROM GoalMadeByUser NATURAL JOIN (Select age, userId From User WHERE gender = %s AND age < %s AND age > %s) AS temp GROUP BY age ORDER BY age;"
+    try:
+        
+        # serializer = FoodSerializer(data=request.data)
+        # serializer.is_valid()
+        # data=serializer.data
+        cursor = connection.cursor()
+        data = request.data
+        cursor.execute(SQL, [data['gender'], data['age_upperbound'], data['age_lowerbound']])
+        r = dictfetchall(cursor)
+        if not r:
+            raise ObjectDoesNotExist
+        return Response(r)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
