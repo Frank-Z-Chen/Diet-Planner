@@ -32,7 +32,7 @@ const AvgCalories = props => {
       
     };
     console.log(data)
-    await axios.post('http://localhost:8000/planner/caloriecal/', 
+    await axios.get('http://localhost:8000/planner/caloriecal/', 
       data
     )
     .then(res => {
