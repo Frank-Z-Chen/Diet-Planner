@@ -15,7 +15,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.39.3",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "reactstrap": "^9.1.5",
     "web-vitals": "^2.1.4"
   },
@@ -31,6 +31,7 @@
       "react-app/jest"
     ]
   },
+  "proxy": "http://127.0.0.1:8000/planner/foods/",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -44,3 +45,5 @@
     ]
   }
 }
+
+

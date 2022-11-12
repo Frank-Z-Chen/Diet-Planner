@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import axios from "axios";
+
 
 const FoodList = props => {
+    
     //hooks
     const [selected, setSelected] = useState(0);
-    
+    //useEffect(() => {deleteSelectedRows()});
+    const onSelectClickedHandler = () => {
+        const response = axios.delete('http://localhost:8000/planner/foods/' + selected + '/')
+        console.log("deleted")
+        return response.data
+        console.log("button clicked")
+    }
+
+
     //table columns
     const columns = [
         { field: 'foodid', headerName: 'ID', width: 90 },
@@ -54,10 +65,14 @@ const FoodList = props => {
                 components={{ Toolbar: GridToolbar }}
             />
             <div>
-                {selected}
+                <button onClick={() => (onSelectClickedHandler())}>Delete</button>
+
+                
             </div>
         </Box>    
     );
 };
+
+
 
 export default FoodList;
