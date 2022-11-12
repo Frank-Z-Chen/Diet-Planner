@@ -1,5 +1,8 @@
 import React from "react";
-import AvgCalories from "./AvgCalories";
+import AdvQuery from "./AdvQuery";
+import AdvQuery2 from "./AdvQuery2";
+import FoodForm from "./FoodForm";
+import FoodFormUpdate from "./FoodFormUpdate";
 import Home from "./Home";
 
 class App extends React.Component {
@@ -8,11 +11,10 @@ class App extends React.Component {
     return (
       <div>
         <Home />
-        <AvgCalories
-          //resetState = { }
-          //toggle= {true}
-          //foods = {[]}
-        />
+        <FoodForm />
+        <FoodFormUpdate />
+        <AdvQuery />
+        <AdvQuery2 />
       </div>
     );
   }

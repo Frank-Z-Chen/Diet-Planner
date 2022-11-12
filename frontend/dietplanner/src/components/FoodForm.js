@@ -10,8 +10,6 @@ const FoodForm = props => {
  const [_carb, setCarb] = useState(null);
  const [_fat, setFat] = useState(null);
  const [_protein, setProtein] = useState(null);
- const [_result1, setResult1] = useState(null);
- 
  /* 
  useEffect(() => {
     if (this.props.food) {
@@ -56,41 +54,15 @@ const FoodForm = props => {
     };
     console.log(data)
 
-    await axios.post('http://localhost:8000/planner/foods/', 
-      data
-    )
+    await axios.post('http://localhost:8000/planner/foods/', data)
     .then(res =>{
-      console.log(res);
+      console.log(res)
     })
     .catch(err =>{
       console.log(err)
     });
 
   };
-
-  const getAvgCalories = async(e) => {
-    e.preventDefault();
-    const data = {
-      foodid: parseInt(food_id),
-      foodname: _name,
-      fat: parseFloat(_fat),
-      protein: parseFloat(_protein),
-      carb: parseFloat(_carb)
-    };
-    console.log(data)
-    await axios.post('http://localhost:8000/planner/caloriecal/', 
-      data
-    )
-    .then(res => {
-      console.log(res)
-    })
-    .catch(err => {
-      console.log(err)
-    });
-
-    
-  }
-  
 
  return (
     /*<form onSubmit={this.props.student ? 
