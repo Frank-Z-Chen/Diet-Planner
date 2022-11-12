@@ -46,6 +46,7 @@ def food_detail(request, id):
                 raise Food.DoesNotExist
             return Response(qs_json)
         elif request.method == 'PATCH':
+            print(request.data)
             #food = get_object_or_404(Food, pk=id)
             serializer = FoodSerializer(data=request.data)
             serializer.is_valid()
@@ -54,6 +55,7 @@ def food_detail(request, id):
             data=serializer.data#validated_data
             cursor.execute("UPDATE Food SET foodName = %s, fat = %s, protein = %s, carb = %s WHERE foodId = %s", [data['foodname'], data['fat'], data['protein'], data['carb'], data['foodid']]) 
             return Response(serializer.data, status=status.HTTP_200_OK)
+            # serializer.data, status=status.HTTP_200_OK
         elif request.method == 'DELETE':
             
             cursor.execute("DELETE FROM Food WHERE foodId = %s", [id])

@@ -3,7 +3,7 @@ import React, { useState,useEffect } from "react";
 import { useForm } from "react-hook-form";
 import '../style/FoodForm.css';
 
-const FoodForm = props => {
+const FoodFormUpdate = props => {
  const {register, handleSubmit } = useForm();
  const [food_id, setFoodid] = useState(null);
  const [_name, setName] = useState(null);
@@ -54,10 +54,12 @@ const FoodForm = props => {
       carb: parseFloat(_carb)
     };
     console.log(data)
-
-    await axios.post('http://localhost:8000/planner/foods/', 
-      data
+//!!!!!!!!!!!!!!!!!!!!!
+    await axios.patch('http://localhost:8000/planner/foods/'+food_id+"/", 
+      data,
+      {headers:{"Content-Type" : "application/json"}}
     )
+//!!!!!!!!!!!!!!!!!!!!!
     .then(res =>{
       console.log(res);
     })
@@ -74,7 +76,7 @@ const FoodForm = props => {
     }>*/
     <form onSubmit = {onFormSubmit}>
 
-     <h1>New Food</h1>
+     <h1>Update Food</h1>
 
      <label>ID</label>
      <input type='number' name="foodid" {...register("foodid", {required: "Required",})} onChange={(e) => setFoodid(e.target.value) } />
@@ -101,4 +103,4 @@ const FoodForm = props => {
  );
 }
 
-export default FoodForm;
+export default FoodFormUpdate;
