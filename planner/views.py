@@ -90,7 +90,7 @@ def food_detail(request, id):
 
 @api_view(['PATCH'])
 def avg_cal_for_diff_age_in_range(request):
-    SQL = "SELECT age, avg(calories) FROM GoalMadeByUser NATURAL JOIN (Select age, userId From User WHERE gender = %s AND age <= %s AND age >= %s) AS temp GROUP BY age ORDER BY age;"
+    SQL = "SELECT age, avg(calories) AS Average_Kal FROM GoalMadeByUser NATURAL JOIN (Select age, userId From User WHERE gender = %s AND age <= %s AND age >= %s) AS temp GROUP BY age ORDER BY age;"
     try:
         if request.method == 'PATCH':
             print(request.data)

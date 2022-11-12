@@ -9,8 +9,12 @@ const AdvQuery = e => {
     const [_gender, setGender] = useState("M");
     const [_maxage, setMaxage] = useState(0);
     const [_minage, setMinage] = useState(0);
-    const [_result, setResult] = useState(0);
+    const [_result, setResult] = useState([]);
     
+    useEffect(() => {
+        _result
+    });
+
     const onFormSubmit = async(e) =>{
         e.preventDefault();
         const data = {
@@ -20,15 +24,23 @@ const AdvQuery = e => {
         };
         console.log(data);
 
-        await axios.get('http://localhost:8000/planner/caloriecal/',data)
-        .then(res =>{
-            setResult(res)
-        });
+        const response = await axios.patch('http://localhost:8000/planner/caloriecal/',data);
+        //console.log(response.data);
+        setResult(response.data);
+        console.log(_result+"asd")
+        {/*const result_data = response.data.map(apiData => ({
+            age: apiData.age,
+            avg: apiData.Average_Kal,
+          }));
+        */}
+
+        //setResult(result_data);
+        //console.log(_result);
     };
 
     return(
         <form onSubmit={onFormSubmit}>
-            <h1>{_result}</h1>
+            <h1>caloriecal</h1>
 
             <label>Gender</label>
             <input name="gender" {...register("gender", {required: "Required",})} onChange={(e) => setGender(e.target.value) } />
@@ -36,12 +48,17 @@ const AdvQuery = e => {
             <label>Max Age</label>
             <input type='number' name="maxage" {...register("maxage", {required: "Required",})} onChange={(e) => setMaxage(e.target.value) } />
 
-            <label>Min. A   ge</label>
+            <label>Min. Age</label>
             <input type='number' name="minage" {...register("minage", {required: "Required",})} onChange={(e) => setMinage(e.target.value) } />
 
             <input type="submit" />
-            <label> </label>
+            <ul>
+                {
+                    _result.
+                }
+            </ul>
         </form>
+
     );
 };
 
