@@ -47,6 +47,7 @@ def food_detail(request, id):
                 raise Food.DoesNotExist
             return Response(qs_json)
         elif request.method == 'PATCH':
+            print(request.data)
             #food = get_object_or_404(Food, pk=id)
             # serializer = FoodSerializer(data=request.data)
             # serializer.is_valid()
