@@ -88,16 +88,32 @@ def food_detail(request, id):
 
 
 @api_view()
-def avg_cal_for_each_age(request):
+def avg_cal_for_diff_age_in_range(request):
     SQL = "SELECT age, avg(calories) FROM GoalMadeByUser NATURAL JOIN (Select age, userId From User WHERE gender = %s AND age < %s AND age > %s) AS temp GROUP BY age ORDER BY age;"
     try:
-        
+        print(request.data)
         # serializer = FoodSerializer(data=request.data)
         # serializer.is_valid()
         # data=serializer.data
         cursor = connection.cursor()
         data = request.data
         cursor.execute(SQL, [data['gender'], data['age_upperbound'], data['age_lowerbound']])
+        r = dictfetchall(cursor)
+        if not r:
+            raise ObjectDoesNotExist
+        return Response(r)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view()
+def total_recipe_cal(request):
+    SQL = "SELECT r.recipeName AS Recipe_Name, SUM(f.UnitKcal * u.weight) AS Total_Calories FROM Recipe r NATURAL JOIN UseFood u JOIN (SELECT foodId, (fat*9+protein*4+carb*4) AS UnitKcal FROM Food) AS f ON u.foodId = f.foodId WHERE r.recipeName = %s GROUP BY u.recipeId;"
+    try:
+        print(request.data)
+        cursor = connection.cursor()
+        data = request.data
+        cursor.execute(SQL, [data['recipename']])
         r = dictfetchall(cursor)
         if not r:
             raise ObjectDoesNotExist
