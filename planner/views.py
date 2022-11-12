@@ -90,7 +90,7 @@ def food_detail(request, id):
 
 @api_view()
 def avg_cal_for_diff_age_in_range(request):
-    SQL = "SELECT age, avg(calories) FROM GoalMadeByUser NATURAL JOIN (Select age, userId From User WHERE gender = %s AND age < %s AND age > %s) AS temp GROUP BY age ORDER BY age;"
+    SQL = "SELECT age, avg(calories) FROM GoalMadeByUser NATURAL JOIN (Select age, userId From User WHERE gender = %s AND age <= %s AND age >= %s) AS temp GROUP BY age ORDER BY age;"
     try:
         print(request.data)
         # serializer = FoodSerializer(data=request.data)
