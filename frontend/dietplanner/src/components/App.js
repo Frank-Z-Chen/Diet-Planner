@@ -1,4 +1,5 @@
 import React from "react";
+import AdvQuery from "./AdvQuery";
 import FoodForm from "./FoodForm";
 import FoodFormUpdate from "./FoodFormUpdate";
 import Home from "./Home";
@@ -9,13 +10,12 @@ class App extends React.Component {
     return (
       <div>
         <Home />
-        <FoodForm
-          //resetState = { }
-          //toggle= {true}
-          //foods = {[]}
-        />
-        <FoodFormUpdate
-        />
+        {/*
+        <FoodForm />
+         <FoodFormUpdate />
+        */}
+        <AdvQuery />
+        
       </div>
     );
   }

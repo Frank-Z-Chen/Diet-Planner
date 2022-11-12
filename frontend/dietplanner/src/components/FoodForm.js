@@ -10,7 +10,6 @@ const FoodForm = props => {
  const [_carb, setCarb] = useState(null);
  const [_fat, setFat] = useState(null);
  const [_protein, setProtein] = useState(null);
- 
  /* 
  useEffect(() => {
     if (this.props.food) {
@@ -59,7 +58,7 @@ const FoodForm = props => {
       data
     )
     .then(res =>{
-      console.log(res);
+      console.log(res)
     })
     .catch(err =>{
       console.log(err)
