@@ -9,6 +9,7 @@ import SignIn from "../signin";
 import NewUser from "../createUser";
 import HomePage from "../homePage";
 import Profile from "../profile";
+import NavBarFunc from "../navBar";
 
 window.userName = "";
 
@@ -40,6 +41,7 @@ class App extends React.Component {
           </Route>
           <Route exact path = '/food'>
             <div>
+              <NavBarFunc />
               <Home />
               <FoodForm />
               <FoodFormUpdate />
