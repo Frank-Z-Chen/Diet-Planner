@@ -32,7 +32,7 @@ class Goalmadebyuser(models.Model):
     enddate = models.DateField(db_column='endDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'GoalMadeByUser'
 
 
@@ -72,7 +72,8 @@ class CustomAccountManager(BaseUserManager):
 
 
 class User(AbstractUser, PermissionsMixin):
-    userid = models.IntegerField(db_column='userId', primary_key=True)  # Field name made lowercase.
+    userid = models.AutoField(db_column='userId', primary_key=True)
+    # userid = models.IntegerField(db_column='userId', primary_key=True)  # Field name made lowercase.
     username = models.CharField(db_column='userName', max_length=255, blank=True, null=True)  # Field name made lowercase.
     email = models.CharField(unique=True, max_length=255, blank=True, null=True)
     age = models.IntegerField(blank=True, null=True)
