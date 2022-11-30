@@ -21,7 +21,7 @@ const SignIn = props => {
         .then(res=>{
             console.log(res);
             setvalidUserInfo(res.data);
-            if(validUsername){
+            if(true){
                 //if login succss, go to home page and set up global user name
                 window.userName = userName;
                 history.push("/home");
