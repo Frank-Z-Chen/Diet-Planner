@@ -6,9 +6,12 @@ import FoodForm from "./FoodForm";
 import FoodFormUpdate from "./FoodFormUpdate";
 
 const FoodHome = () => {
-  //hooks
   const [food, setFoods] = useState([]);
   const [foodids, setFoodIds] = useState(null);
+  useEffect(()=>{
+    setFoodIds("r.foodid");                                                                          
+  },[food]);
+
   //variables
   const foodColumns = [
     { field: 'foodid', headerName: 'ID', width: 90 },
@@ -38,27 +41,13 @@ const FoodHome = () => {
     },
   ];
 
-  //useEffect
-  useEffect(()=>{
-    getFoods();
-    setFoodIds("r.foodid");                                                                          
-  },[food]);
-
-  //get API
-  const getFoods = async () => {
-    await axios.get('http://localhost:8000/planner/foods/')
-    .then( (res) =>{ setFoods(res.data)})
-    .catch((error =>{console.log(error)}));
-  };
-
   return (
     <Container style={{ marginTop: "20px" }}>
       <Row>
         <Col>
           <DataTable
-            data={food}
             columns={foodColumns}
-            DELETE_API='http://localhost:8000/planner/foods/'
+            API='http://localhost:8000/planner/foods/'
             data_id={foodids}
             deleteAllowed
           />

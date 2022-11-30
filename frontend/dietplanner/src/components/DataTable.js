@@ -18,9 +18,14 @@ const DataTable = (props) => {
     const [idsAmount, setidsAmount] = useState([]); //store a pair of foodid and amount
     const [_data, setData] = useState([]);//GET data
     const [_recipeName, setRecipeName] = useState("my_recipe");
+    const [deleteTrigger, setDeleteTrigger] = useState(true);
     useEffect(() => {
         getData();
     },[]);
+
+    useEffect( () => {
+        getData();
+    },[deleteTrigger]);
     //*****handlers*****
     const onRowsSelectionHandler = (ids) =>{
         setSelected(ids);
@@ -33,6 +38,7 @@ const DataTable = (props) => {
             axios.delete(props.API + id + '/')
                 .then((res) => {console.log(res)})
         );
+        setDeleteTrigger(!deleteTrigger);
     };
     const onAddClickedHandler = () => {
         const pair = {
