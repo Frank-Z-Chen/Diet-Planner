@@ -37,13 +37,6 @@ const RecipeUpdate = () => {
         width: 150,
         editable: true,
     },
-    {
-        field: 'amount',
-        headerName : 'Amount(gram)',
-        type: 'number',
-        width: 150,
-        editable: true
-    }
   ];
 
   //useEffect
@@ -66,7 +59,7 @@ const RecipeUpdate = () => {
           <DataTable
             data={food}
             columns={foodColumns}
-            DELETE_API='http://localhost:8000/planner/foods/'
+            API='http://localhost:8000/planner/foods/'
             data_id={foodids}
             deleteAllowed={false}
           />
