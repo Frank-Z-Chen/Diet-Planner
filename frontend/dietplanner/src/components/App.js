@@ -5,13 +5,14 @@ import FoodForm from "./FoodForm";
 import FoodFormUpdate from "./FoodFormUpdate";
 import FoodHome from "./FoodHome";
 import RecipeHome from "./RecipeHome";
-
+import WeeklyPlan from "./WeeklyPlan"
+import Plan from "./Plan"
 class App extends React.Component {
 
   render(){
     return (
       <div>
-        <RecipeHome/>
+        <Plan/>
       </div>
     );
   }
