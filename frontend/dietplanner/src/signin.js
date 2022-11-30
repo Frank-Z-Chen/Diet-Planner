@@ -8,16 +8,28 @@ const SignIn = props => {
     const [validUserInfo, setvalidUserInfo] = useState(true);
     const history = useHistory();
 
-    const onSignInSubmit = (e) =>{
+    const onSignInSubmit = async (e) =>{
         e.preventDefault();
-        const data = {userName, pwd};
+        const data = {
+          userName:userName, 
+          password:pwd
+        };
         console.log("sign In");
         console.log(data);
-        
-        setvalidUserInfo(false);
-        window.userName = "shadowjerry";
-        console.log(window.userName);
-        history.push("/home");
+        //TODO: waiting for correct link from backend
+        await axios.post('http://localhost:8000/planner/foods/', data)
+        .then(res=>{
+            console.log(res);
+            setvalidUserInfo(res.data);
+            if(validUsername){
+                //if login succss, go to home page and set up global user name
+                window.userName = userName;
+                history.push("/home");
+            }
+        })
+        .catch(err =>{
+            console.log(err)
+        });
     }
 
     const onSignUpSubmit = (e) =>{

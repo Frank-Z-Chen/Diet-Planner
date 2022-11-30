@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 
 const NewUser = () => {
     const [UserName, setUserName] = useState("");
@@ -10,16 +11,31 @@ const NewUser = () => {
     const [validUsername, setvalidUsername] = useState(true);
     const history = useHistory();
 
-    const onFormSubmit = (e) =>{
+    const onFormSubmit = async (e) =>{
         e.preventDefault();
-        const data = {UserName, pwd, email,age,gender,pwd};
-        console.log("profile Update");
+        //This will be the actual data pass to backend using URL provided
+        const data = {
+            userName:UserName, 
+            password:pwd, 
+            userEmail:email,
+            age:age,
+            gender:gender};
         console.log(data);
 
         //vlidate user update
-        setvalidUsername(false);
-        //if update succss, go to home page
-        history.push("/home");
+        //TODO: API Pending
+        await axios.post('http://localhost:8000/planner/foods/', data)
+        .then(res=>{
+            console.log(res);
+            setvalidUsername(res.data);
+            if(validUsername){
+                //if update succss, go to home page
+                history.push("/home");
+            }
+        })
+        .catch(err =>{
+            console.log(err)
+        });
     }
 
     return ( 

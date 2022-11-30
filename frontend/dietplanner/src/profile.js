@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import NavBarFunc from "./navBar";
+import axios from "axios";
 
 const Profile = () => {
     const [UserName, setUserName] = useState(window.UserName);
@@ -11,16 +12,30 @@ const Profile = () => {
     const [validUsername, setvalidUsername] = useState(true);
     const history = useHistory();
 
-    const onFormSubmit = (e) =>{
+    const onFormSubmit = async (e) =>{
         e.preventDefault();
-        const data = {UserName, pwd, email,age,gender,pwd};
-        console.log("profile Update");
+        const data = {
+            userName:UserName, 
+            password:pwd, 
+            userEmail:email,
+            age:age,
+            gender:gender};
         console.log(data);
 
         //vlidate user update
-        setvalidUsername(false);
-        //if update succss, go to home page
-        history.push("/home");
+        //TODO: API Pending
+        await axios.post('http://localhost:8000/planner/foods/', data)
+        .then(res=>{
+            console.log(res);
+            setvalidUsername(res.data);
+            if(validUsername){
+                //if update succss, go to home page
+                history.push("/home");
+            }
+        })
+        .catch(err =>{
+            console.log(err)
+        });
     }
 
     useEffect(()=>{
@@ -30,7 +45,7 @@ const Profile = () => {
     return ( 
         <div>
             <NavBarFunc />
-            {!validUsername && <h2>User Name already exist, try other User name!</h2>}
+            {!validUsername && <h2>Update Failed, please try again!</h2>}
             <form onSubmit={onFormSubmit}>
                 <label>Password</label>
                 <input 
