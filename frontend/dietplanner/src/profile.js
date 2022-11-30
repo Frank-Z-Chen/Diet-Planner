@@ -38,8 +38,21 @@ const Profile = () => {
         });
     }
 
-    useEffect(()=>{
+    useEffect(async ()=>{
         //we will fetch data from DB for the first time
+        //TODO: API Pending
+        await axios.get('http://localhost:8000/planner/foods/')
+        .then(res=>{
+            console.log(res);
+            setvalidUsername(res.data);
+            if(validUsername){
+                //if update succss, go to home page
+                history.push("/home");
+            }
+        })
+        .catch(err =>{
+            console.log(err)
+        });
     },[]);
     
     return ( 
