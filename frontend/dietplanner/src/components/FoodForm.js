@@ -3,45 +3,20 @@ import React, { useState,useEffect } from "react";
 import { useForm } from "react-hook-form";
 import '../style/FoodForm.css';
 
-const FoodForm = props => {
+/*PROPS
+props.formName: name of the form
+props.column: display column name for the table
+props.delete_api: api used to send delete request
+props.data_id: the id/key name in data
+*/
+
+const FoodForm = (props) => {
  const {register, handleSubmit } = useForm();
  const [food_id, setFoodid] = useState(null);
  const [_name, setName] = useState(null);
  const [_carb, setCarb] = useState(null);
  const [_fat, setFat] = useState(null);
  const [_protein, setProtein] = useState(null);
- /* 
- useEffect(() => {
-    if (this.props.food) {
-      const { name, carb, fat, protein } = this.props.food;
-      setName(name);
-      setCarb(carb);
-      setFat(fat);
-      setProtein(protein);
-  };
-  */
-
-  const createStudent = e => {
-    e.preventDefault();
-    //this.props.resetState();
-    //this.props.toggle();
-    /*axios.post(API_URL, this.state).then(() => {
-      this.props.resetState();
-      this.props.toggle();
-    });*/
-    console.log("create request send");
-  };
-
-  const editStudent = e => {
-    e.preventDefault();
-    //this.props.resetState();
-    //this.props.toggle();
-    /*axios.put(API_URL + this.state.pk, this.state).then(() => {
-      this.props.resetState();
-      this.props.toggle();
-    });*/
-    console.log("edit request send");
-  };
 
   const onFormSubmit = async (e) =>{
     e.preventDefault();
@@ -52,9 +27,8 @@ const FoodForm = props => {
       protein: parseFloat(_protein),
       carb: parseFloat(_carb)
     };
-    console.log(data)
-
-    await axios.post('http://localhost:8000/planner/foods/', data)
+    
+    await axios.post('http://localhost:8000/planner/foods/',data)
     .then(res =>{
       console.log(res)
     })
@@ -65,13 +39,10 @@ const FoodForm = props => {
   };
 
  return (
-    /*<form onSubmit={this.props.student ? 
-      handleSubmit(data => {this.editStudent(data)} )
-      :handleSubmit(data => {this.createStudent(data)}) 
-    }>*/
+
     <form onSubmit = {onFormSubmit}>
 
-     <h1>New Food</h1>
+     <h1>{props.formName}</h1>
 
      <label>ID</label>
      <input type='number' name="foodid" {...register("foodid", {required: "Required",})} onChange={(e) => setFoodid(e.target.value) } />
