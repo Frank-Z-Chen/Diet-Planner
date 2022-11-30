@@ -30,33 +30,33 @@ const DataTable = (props) => {
     };
     const onDeleteClickedHandler = () => {
         selected.map( (id) =>
-            axios.delete(props.DELETE_API + id + '/')
+            axios.delete(props.API + id + '/')
                 .then((res) => {console.log(res)})
         );
     };
     const onAddClickedHandler = () => {
         const pair = {
-            foodid: selected,
-            weight: amount
+            foodId: parseInt(selected),
+            weight: parseInt(amount)
         };
         setidsAmount(current => [...current,pair]);
         
         
     };
-    const onCompleteClickedHandler =  () => {
+    const onCompleteClickedHandler =  async () => {
         const data = {
             recipeName : _recipeName,
             foodWeights : idsAmount
         };
         
         console.log(data);
-        /*await axios.post('http://localhost:8000/planner/foods/',data)
+        await axios.post('http://localhost:8000/planner/users/10000/recipes/',data)
         .then(res =>{
         console.log(res)
         })
         .catch(err =>{
         console.log(err)
-        });*/
+        });
     }
 
     //*****functions*****
@@ -100,7 +100,7 @@ const DataTable = (props) => {
     );//amount entry part
     const currentSelected = (
         idsAmount.map( (item) => (
-        <li> FoodID: {item.foodid} Amount: {item.weight}</li>
+        <li> FoodID: {item.foodId} Amount: {item.weight}</li>
     ))
     );//display current selected recipe part
     const completeButton = (
