@@ -10,6 +10,11 @@ import NavBarFunc from "../navBar";
 
 window.userName = "";
 window.token = "";
+window.userId = -1;
+window.email = "";
+window.gender = "";
+window.age ="";
+
 class App extends React.Component {
 
   render(){
@@ -33,6 +38,7 @@ class App extends React.Component {
           </Route>
           <Route exact path = '/profile'>
             <div>
+              <NavBarFunc />
               <Profile />
             </div>
           </Route>

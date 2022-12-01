@@ -1,34 +1,37 @@
 import axios from "axios";
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-const SignIn = props => {
+const SignIn = () => {
     //const {register, handleSubmit } = useForm();
-    const [userName, setUserName] = useState('');
+    const [email, setEmail] = useState('');
     const [pwd, setPwd] = useState('');
     const [validUserInfo, setvalidUserInfo] = useState(true);
     const history = useHistory();
 
     const onSignInSubmit = async (e) =>{
         e.preventDefault();
+        //construct data post to backend
         const data = {
-          userName:userName, 
+          email:email, 
           password:pwd
         };
+
         console.log("sign In");
         console.log(data);
-        //TODO: waiting for correct link from backend
+        
+        //TODO: waiting for correct link from backend and set up global value
         await axios.post('http://localhost:8000/auth/jwt/create/', data)
         .then(res=>{
-            console.log(res);
             //if status = 403 then login failed
-            if(res.status = 403){
+            if(res.status === 403){
               setvalidUserInfo(false);
             }
             else{
-                //if login succss, go to home page and set up global user name
-                window.userName = userName;
-                //this should fetch token from data
+                //if login succss, go to home page and set up global token
                 window.token = res.data.access;
+                //call helper function to set global value
+                fetchUserDataWithToken();
+                //after setting up user data, go home page
                 history.push("/home");
             }
         })
@@ -36,7 +39,27 @@ const SignIn = props => {
             console.log(err)
         });
     }
-    //Redirect to a different page
+    //helper function for setting up global value after user successfully login
+    const fetchUserDataWithToken = async()=>{
+        //use the accepted token to fetch user Data
+        //TODO: validate use of API
+        await axios.get('http://localhost:8000/auth/users/me/',{
+            headers:{
+                'Authorization': window.token
+            }
+        }).then(res=>{
+            window.userName = res.data.userName;
+            window.userId = res.data.userId;
+            window.email = res.data.email;
+            window.gender = res.data.gender;
+            window.age =res.data.age;
+        })
+        .catch(err =>{
+            console.log(err)
+        });
+    }
+
+    //Redirect to a sign up page
     const onSignUpSubmit = (e) =>{
         e.preventDefault();
         history.push("/createUser");
@@ -48,13 +71,13 @@ const SignIn = props => {
         {!validUserInfo && <h2>Either User Name or Password is Incorrect, try another time!</h2>}
         <form onSubmit = {onSignInSubmit}>
             <h1>User SignIn</h1>
-            <label>User Name</label>
+            <label>Email Address</label>
             <input 
             type='text' 
-            name="userName" 
+            name="email" 
             required
-            value = {userName}
-            onChange={(e) => setUserName(e.target.value) } 
+            value = {email}
+            onChange={(e) => setEmail(e.target.value) } 
             />
             <label>Password</label>
             <input
