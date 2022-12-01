@@ -8,5 +8,5 @@ urlpatterns = [
     path('totalcal/', views.total_recipe_cal),
     path('users/<int:id>/', views.show_user),
     path('users/<int:id>/recipes/', views.recipes),
-    path('users/<int:id>/recipes/<int:recipeId>', views.deleterecipe)
+    path('users/<int:id>/recipes/<int:recipeId>/', views.deleterecipe)
 ]
