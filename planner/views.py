@@ -18,6 +18,8 @@ def dictfetchall(cursor):
 
 @api_view(['GET','POST'])
 def show_foods(request):
+    # if request.user == "AnonymousUser":
+    #     return Response(status=status.HTTP_403_FORBIDDEN)
     try:
         if request.method == 'GET':
             qs = Food.objects.raw("SELECT * FROM Food")
@@ -130,9 +132,13 @@ def total_recipe_cal(request):
 
 @api_view(['GET','POST'])
 def show_user(request, id):
+    if str(request.user) == "AnonymousUser":
+        return Response(status=status.HTTP_403_FORBIDDEN)
     try:
         SQL = "SELECT * FROM User WHERE userId = %s;"
         if request.method == 'GET':
+            if request.user.userid != id :
+                return Response(status=status.HTTP_403_FORBIDDEN)
             cursor = connection.cursor()
             data = request.data
             cursor.execute(SQL, [id])
@@ -150,7 +156,7 @@ def show_user(request, id):
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'DELETE'])
 def recipes(request,id):
     SQL_GET =   """
                 SELECT recipeId, SUM(fat * weight) AS total_fat, SUM(protein * weight) AS total_protein, SUM(carb * weight) AS total_carb
@@ -175,6 +181,9 @@ def recipes(request,id):
             json_file = data["foodWeights"]
             cursor.execute(SQL_POST, [id, data["recipeName"], json.dumps(json_file)])
             return Response(status=status.HTTP_201_CREATED)
+        elif request.method == 'DELETE':
+            cursor.execute("DELETE FROM Recipe Where recipeId = %s;", [id])
+            return Response(status=status.HTTP_204_NO_CONTENT)            
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
