@@ -41,7 +41,6 @@ const DataTable = (props) => {
                 .then((res) => {console.log(res)})
         );
         setReset(!reset);
-        console.log("Hi"); 
     };
     const onAddClickedHandler = () => {
         const pair = {
