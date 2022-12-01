@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Col, Container, Row } from "reactstrap";
+import {useHistory} from 'react-router-dom';
 import DataTable from "./DataTable";
-import RecipeUpdate from "./RecipeUpdate";
+import NavBarFunc from "../navBar";
 
 const RecipeHome = () => {
   const [recipe, setRecipe] = useState([]);
@@ -11,8 +11,8 @@ const RecipeHome = () => {
     setRecipeIds("r.recipeId");                                                                          
   },[recipe]);
 
-   //variables
-   const recipeColumns = [
+  //variables
+  const recipeColumns = [
     { field: 'recipeId', headerName: 'ID', width: 90 },
     /*
     {
@@ -41,6 +41,10 @@ const RecipeHome = () => {
         editable: true,
     },
   ];
+  const goUpdateRecipe = () =>{
+    history.push("/create_recipe");
+  }
+  const history = useHistory();
 
   return (
     <Container style={{ marginTop: "20px" }}>
@@ -52,7 +56,7 @@ const RecipeHome = () => {
             data_id={recipeids}
             deleteAllowed
           />
-          {<RecipeUpdate />}
+            <button onClick={goUpdateRecipe}>Add/Update Recipe</button>
         </Col>
       </Row>
     </Container>
