@@ -93,7 +93,10 @@ def food_detail(request, id):
 
 @api_view(['PATCH'])
 def avg_cal_for_diff_age_in_range(request):
-    SQL = "SELECT age, avg(calories) AS Average_Kal FROM GoalMadeByUser NATURAL JOIN (Select age, userId From User WHERE gender = %s AND age <= %s AND age >= %s) AS temp GROUP BY age ORDER BY age;"
+    SQL ="""SELECT age, avg(calories) AS Average_Kal 
+            FROM GoalMadeByUser NATURAL JOIN (Select age, userId From User WHERE gender = %s AND age <= %s AND age >= %s) AS temp 
+            GROUP BY age 
+            ORDER BY age;"""
     try:
         if request.method == 'PATCH':
             print(request.data)
@@ -156,7 +159,7 @@ def show_user(request, id):
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['GET', 'POST', 'DELETE'])
+@api_view(['GET', 'POST'])
 def recipes(request,id):
     SQL_GET =   """
                 SELECT recipeId, SUM(fat * weight) AS total_fat, SUM(protein * weight) AS total_protein, SUM(carb * weight) AS total_carb
@@ -180,10 +183,16 @@ def recipes(request,id):
             data = request.data
             json_file = data["foodWeights"]
             cursor.execute(SQL_POST, [id, data["recipeName"], json.dumps(json_file)])
-            return Response(status=status.HTTP_201_CREATED)
-        elif request.method == 'DELETE':
-            cursor.execute("DELETE FROM Recipe Where recipeId = %s;", [id])
-            return Response(status=status.HTTP_204_NO_CONTENT)            
+            return Response(status=status.HTTP_201_CREATED)          
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['DELETE'])
+def deleterecipe(request,id, recipeId):
+    try:
+        if request.method == 'DELETE':
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM Recipe Where recipeId = %s;", [recipeId])
+            return Response(status=status.HTTP_204_NO_CONTENT)            
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
