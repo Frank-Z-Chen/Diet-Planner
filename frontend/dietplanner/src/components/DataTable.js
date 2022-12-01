@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from "axios";
+import {useHistory} from 'react-router-dom';
 
 /*PROPS
 props.data: display data/rows for the table DEPRECIATED!!!
@@ -18,14 +19,15 @@ const DataTable = (props) => {
     const [idsAmount, setidsAmount] = useState([]); //store a pair of foodid and amount
     const [_data, setData] = useState([]);//GET data
     const [_recipeName, setRecipeName] = useState("my_recipe");
-    const [deleteTrigger, setDeleteTrigger] = useState(true);
+    const [reset, setReset] = useState(true);
     useEffect(() => {
         getData();
     },[]);
 
     useEffect( () => {
         getData();
-    },[deleteTrigger]);
+    },[reset]);
+    const history = useHistory();
     //*****handlers*****
     const onRowsSelectionHandler = (ids) =>{
         setSelected(ids);
@@ -38,7 +40,7 @@ const DataTable = (props) => {
             axios.delete(props.API + id + '/')
                 .then((res) => {console.log(res)})
         );
-        setDeleteTrigger(!deleteTrigger);
+        setReset(!reset);
     };
     const onAddClickedHandler = () => {
         const pair = {
@@ -54,15 +56,15 @@ const DataTable = (props) => {
             recipeName : _recipeName,
             foodWeights : idsAmount
         };
-        
-        console.log(data);
+        history.push("/recipe");
         await axios.post('http://localhost:8000/planner/users/10000/recipes/',data)
         .then(res =>{
-        console.log(res)
+            console.log(res)
         })
         .catch(err =>{
-        console.log(err)
+            console.log(err)
         });
+        
     }
 
     //*****functions*****
@@ -126,10 +128,12 @@ const DataTable = (props) => {
     //*****returns*****
     if (props.deleteAllowed===true) {
         return (
-            <Box sx={{ height: 400, width: '100%' }}>
+            <div>
+                <Box sx={{ height: 400, width: '100%' }}>
                     {dataTable}
+                </Box>
                     {deleteButton}
-            </Box>
+            </div>
         );
     }else{
         return (

@@ -18,6 +18,8 @@ def dictfetchall(cursor):
 
 @api_view(['GET','POST'])
 def show_foods(request):
+    # if request.user == "AnonymousUser":
+    #     return Response(status=status.HTTP_403_FORBIDDEN)
     try:
         if request.method == 'GET':
             qs = Food.objects.raw("SELECT * FROM Food")
@@ -91,7 +93,10 @@ def food_detail(request, id):
 
 @api_view(['PATCH'])
 def avg_cal_for_diff_age_in_range(request):
-    SQL = "SELECT age, avg(calories) AS Average_Kal FROM GoalMadeByUser NATURAL JOIN (Select age, userId From User WHERE gender = %s AND age <= %s AND age >= %s) AS temp GROUP BY age ORDER BY age;"
+    SQL ="""SELECT age, avg(calories) AS Average_Kal 
+            FROM GoalMadeByUser NATURAL JOIN (Select age, userId From User WHERE gender = %s AND age <= %s AND age >= %s) AS temp 
+            GROUP BY age 
+            ORDER BY age;"""
     try:
         if request.method == 'PATCH':
             print(request.data)
@@ -130,9 +135,13 @@ def total_recipe_cal(request):
 
 @api_view(['GET','POST'])
 def show_user(request, id):
+    if str(request.user) == "AnonymousUser":
+        return Response(status=status.HTTP_403_FORBIDDEN)
     try:
         SQL = "SELECT * FROM User WHERE userId = %s;"
         if request.method == 'GET':
+            if request.user.userid != id :
+                return Response(status=status.HTTP_403_FORBIDDEN)
             cursor = connection.cursor()
             data = request.data
             cursor.execute(SQL, [id])
@@ -174,7 +183,16 @@ def recipes(request,id):
             data = request.data
             json_file = data["foodWeights"]
             cursor.execute(SQL_POST, [id, data["recipeName"], json.dumps(json_file)])
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_201_CREATED)          
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['DELETE'])
+def deleterecipe(request,id, recipeId):
+    try:
+        if request.method == 'DELETE':
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM Recipe Where recipeId = %s;", [recipeId])
+            return Response(status=status.HTTP_204_NO_CONTENT)            
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)

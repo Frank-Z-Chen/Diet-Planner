@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Col, Container, Row } from "reactstrap";
 import DataTable from "./DataTable";
 
@@ -41,6 +40,7 @@ const RecipeUpdate = () => {
         editable: true,
     },
   ];
+  
 
   return (
     <Container style={{ marginTop: "20px" }}>

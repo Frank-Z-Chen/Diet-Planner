@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Col, Container, Row } from "reactstrap";
+import {useHistory} from 'react-router-dom';
 import DataTable from "./DataTable";
-import RecipeUpdate from "./RecipeUpdate";
 
 const RecipeHome = () => {
   const [recipe, setRecipe] = useState([]);
   const [recipeids, setRecipeIds] = useState(null);
+  const [reset, setReset] = useState(true); 
   useEffect(()=>{
     setRecipeIds("r.recipeId");                                                                          
   },[recipe]);
 
-   //variables
-   const recipeColumns = [
+  //variables
+  const recipeColumns = [
     { field: 'recipeId', headerName: 'ID', width: 90 },
     /*
     {
@@ -41,6 +41,11 @@ const RecipeHome = () => {
         editable: true,
     },
   ];
+  const goUpdateRecipe = () =>{
+    history.push("/create_recipe");
+    setReset(!reset);
+  }
+  const history = useHistory();
 
   return (
     <Container style={{ marginTop: "20px" }}>
@@ -51,8 +56,9 @@ const RecipeHome = () => {
             API='http://localhost:8000/planner/users/10000/recipes/'
             data_id={recipeids}
             deleteAllowed
+            resetStatus={reset}
           />
-          {<RecipeUpdate />}
+            <button onClick={goUpdateRecipe}>Add/Update Recipe</button>
         </Col>
       </Row>
     </Container>
