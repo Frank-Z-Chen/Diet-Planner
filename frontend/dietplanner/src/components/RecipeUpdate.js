@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Col, Container, Row } from "reactstrap";
 import DataTable from "./DataTable";
-import {useHistory} from 'react-router-dom';
 
 const RecipeUpdate = () => {
   const [food, setFoods] = useState([]);

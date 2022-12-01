@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Col, Container, Row } from "reactstrap";
 import {useHistory} from 'react-router-dom';
 import DataTable from "./DataTable";
-import NavBarFunc from "../navBar";
 
 const RecipeHome = () => {
   const [recipe, setRecipe] = useState([]);
   const [recipeids, setRecipeIds] = useState(null);
+  const [reset, setReset] = useState(true); 
   useEffect(()=>{
     setRecipeIds("r.recipeId");                                                                          
   },[recipe]);
@@ -43,6 +43,7 @@ const RecipeHome = () => {
   ];
   const goUpdateRecipe = () =>{
     history.push("/create_recipe");
+    setReset(!reset);
   }
   const history = useHistory();
 
@@ -55,6 +56,7 @@ const RecipeHome = () => {
             API='http://localhost:8000/planner/users/10000/recipes/'
             data_id={recipeids}
             deleteAllowed
+            resetStatus={reset}
           />
             <button onClick={goUpdateRecipe}>Add/Update Recipe</button>
         </Col>

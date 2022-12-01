@@ -70,10 +70,6 @@ const FoodFormUpdate = props => {
   };
 
  return (
-    /*<form onSubmit={this.props.student ? 
-      handleSubmit(data => {this.editStudent(data)} )
-      :handleSubmit(data => {this.createStudent(data)}) 
-    }>*/
     <form onSubmit = {onFormSubmit}>
 
      <h1>Update Food</h1>
