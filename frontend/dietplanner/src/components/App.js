@@ -7,7 +7,6 @@ import NewUser from "../createUser";
 import HomePage from "../homePage";
 import Profile from "../profile";
 import NavBarFunc from "../navBar";
-import RecipeUpdate from "./RecipeUpdate";
 
 window.userName = "";
 
@@ -47,12 +46,6 @@ class App extends React.Component {
             <div>
               <NavBarFunc />
               <RecipeHome/>
-            </div>
-          </Route>
-          <Route exact path = '/create_recipe'>
-            <div>
-              <NavBarFunc />
-              <RecipeUpdate />
             </div>
           </Route>
         </Switch>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Col, Container, Row } from "reactstrap";
 import DataTable from "./DataTable";
-import {useHistory} from 'react-router-dom';
 
 const RecipeUpdate = () => {
   const [food, setFoods] = useState([]);
@@ -41,7 +41,6 @@ const RecipeUpdate = () => {
         editable: true,
     },
   ];
-  
 
   return (
     <Container style={{ marginTop: "20px" }}>
