@@ -8,5 +8,7 @@ urlpatterns = [
     path('totalcal/', views.total_recipe_cal),
     path('users/<int:id>/', views.show_user),
     path('users/<int:id>/recipes/', views.recipes),
-    path('users/<int:id>/recipes/<int:recipeId>/', views.deleterecipe)
+    path('users/<int:id>/recipes/<int:recipeId>/', views.delete_recipe),
+    path('users/<int:id>/plans/', views.plans),
+    path('users/<int:id>/plans/<int:planId>/', views.plan_detail),
 ]
