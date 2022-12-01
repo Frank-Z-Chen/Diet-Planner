@@ -188,11 +188,58 @@ def recipes(request,id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['DELETE'])
-def deleterecipe(request,id, recipeId):
+def delete_recipe(request,id, recipeId):
     try:
         if request.method == 'DELETE':
             cursor = connection.cursor()
             cursor.execute("DELETE FROM Recipe Where recipeId = %s;", [recipeId])
+            return Response(status=status.HTTP_204_NO_CONTENT)            
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET', 'POST'])
+def plans(request,id):
+    SQL_GET ="""SELECT planId
+                FROM decide
+                WHERE userId = %s;"""
+    SQL_POST = "CALL CreateNewPlan(%s, %s, %s);"
+    try:
+        if request.method == 'GET':
+            print(request.data)
+            cursor = connection.cursor()
+            data = request.data
+            cursor.execute(SQL_GET, [id])
+            r = dictfetchall(cursor)
+            if not r:
+                raise ObjectDoesNotExist
+            return Response(r)            
+        elif request.method == 'POST':
+            cursor = connection.cursor()
+            data = request.data
+            json_file = data["recipeList"]
+            cursor.execute(SQL_POST, [id, data["userName"], json.dumps(json_file)])
+            return Response(status=status.HTTP_201_CREATED)          
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET','DELETE'])
+def plan_detail(request,id, planId):
+    SQL_GET ="""SELECT c.recipeId
+                FROM decide AS d JOIN WeeklyPlan AS w ON (d.planId = w.planId) JOIN contains AS c ON (w.planId = c.planId)
+                WHERE d.userId = %s AND c.planId = %s;"""
+    try:
+        if request.method == 'GET':
+            print(request.data)
+            cursor = connection.cursor()
+            cursor.execute(SQL_GET, [id, planId])
+            r = dictfetchall(cursor)
+            if not r:
+                raise ObjectDoesNotExist
+            return Response(r)            
+        elif request.method == 'DELETE':
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM WeeklyPlan Where planId = %s;", [planId])
             return Response(status=status.HTTP_204_NO_CONTENT)            
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
