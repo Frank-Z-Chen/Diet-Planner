@@ -17,13 +17,17 @@ const SignIn = props => {
         console.log("sign In");
         console.log(data);
         //TODO: waiting for correct link from backend
-        await axios.post('http://localhost:8000/planner/foods/', data)
+        await axios.post('http://localhost:8000/auth/jwt/create/', data)
         .then(res=>{
             console.log(res);
-            setvalidUserInfo(res.data);
-            if(true){
+            //if status = 403 then login failed
+            if(res.status = 403){
+              setvalidUserInfo(false);
+            }
+            else{
                 //if login succss, go to home page and set up global user name
                 window.userName = userName;
+                window.token = res.data.access;
                 history.push("/home");
             }
         })
@@ -31,10 +35,9 @@ const SignIn = props => {
             console.log(err)
         });
     }
-
+    //Redirect to a different page
     const onSignUpSubmit = (e) =>{
         e.preventDefault();
-        //to redirect to a different page
         history.push("/createUser");
     }
     return (
@@ -48,7 +51,6 @@ const SignIn = props => {
             <input 
             type='text' 
             name="userName" 
-            //{...register("foodid", {required: "Required",})} 
             required
             value = {userName}
             onChange={(e) => setUserName(e.target.value) } 
@@ -57,7 +59,6 @@ const SignIn = props => {
             <input
             type='text' 
             name="password" 
-            //{...register("name", {required: "Required",})} 
             required
             value = {pwd}
             onChange={(e) => setPwd(e.target.value)} 
@@ -70,25 +71,3 @@ const SignIn = props => {
 }
 
 export default SignIn;
-
-/*
-  const onFormSubmit = async (e) =>{
-    e.preventDefault();
-    const data = {
-      foodid: parseInt(food_id),
-      foodname: _name,
-      fat: parseFloat(_fat),
-      protein: parseFloat(_protein),
-      carb: parseFloat(_carb)
-    };
-    console.log(data)
-
-    await axios.post('http://localhost:8000/planner/foods/', data)
-    .then(res =>{
-      console.log(res)
-    })
-    .catch(err =>{
-      console.log(err)
-    });
-  };
-*/

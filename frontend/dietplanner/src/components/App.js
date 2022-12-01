@@ -9,7 +9,7 @@ import Profile from "../profile";
 import NavBarFunc from "../navBar";
 
 window.userName = "";
-
+window.token = "";
 class App extends React.Component {
 
   render(){

@@ -20,11 +20,16 @@ const NewUser = () => {
             userEmail:email,
             age:age,
             gender:gender};
+        console.log("data sent to backend");
         console.log(data);
 
         //vlidate user update
         //TODO: API Pending
-        await axios.post('http://localhost:8000/planner/foods/', data)
+        await axios.post('http://localhost:8000/auth/users/', data,{
+            headers:{
+                'Authorization': window.token
+            }
+        })
         .then(res=>{
             console.log(res);
             setvalidUsername(res.data);
