@@ -27,6 +27,7 @@ const SignIn = props => {
             else{
                 //if login succss, go to home page and set up global user name
                 window.userName = userName;
+                //this should fetch token from data
                 window.token = res.data.access;
                 history.push("/home");
             }
