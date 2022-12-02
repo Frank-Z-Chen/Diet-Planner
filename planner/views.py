@@ -133,7 +133,7 @@ def total_recipe_cal(request):
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['GET','POST'])
+@api_view(['GET','PATCH'])
 def show_user(request, id):
     if str(request.user) == "AnonymousUser":
         return Response(status=status.HTTP_403_FORBIDDEN)
@@ -149,13 +149,11 @@ def show_user(request, id):
             if not r:
                 raise ObjectDoesNotExist
             return Response(r)
-        # elif request.method == 'POST':
-        #     serializer = FoodSerializer(data=request.data)
-        #     serializer.is_valid(raise_exception=True)
-        #     data=serializer.validated_data
-        #     cursor = connection.cursor()
-        #     cursor.execute("INSERT INTO Food VALUES(%s, %s, %s, %s, %s)", [data['foodid'], data['foodname'], data['fat'], data['protein'], data['carb']]) 
-        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+        elif request.method == 'PATCH':
+            cursor = connection.cursor()
+            data=request.data
+            cursor.execute("UPDATE User SET userName = %s, age = %s, gender = %s, password = %s WHERE userId = %s", [data['userName'], data['age'], data['gender'], data['password'], id]) 
+            return Response(request.data, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -187,7 +185,7 @@ def recipes(request,id):
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['GET', 'DELETE'])
+@api_view(['GET', 'PATCH','DELETE'])
 def recipe_detail(request,id, recipeId):
     SQL_GET =   """
                 SELECT recipeId, recipeName, SUM(fat * weight) AS total_fat, SUM(protein * weight) AS total_protein, SUM(carb * weight) AS total_carb
@@ -195,6 +193,8 @@ def recipe_detail(request,id, recipeId):
                 WHERE userId = %s AND recipeId = %s
                 GROUP BY recipeId
                 """
+    SQL_PATCH = "CALL UpdateRecipe(%s, %s, %s)"
+    SQL_DELETE = "DELETE FROM Recipe Where recipeId = %s;"
     try:
         if request.method == 'GET':
             cursor = connection.cursor()
@@ -203,10 +203,16 @@ def recipe_detail(request,id, recipeId):
             r = dictfetchall(cursor)
             if not r:
                 raise ObjectDoesNotExist
-            return Response(r)    
+            return Response(r)
+        elif request.method == 'PATCH':
+            cursor = connection.cursor()
+            data=request.data
+            json_file = data["foodWeights"]
+            cursor.execute(SQL_PATCH, [recipeId, data["recipeName"], json.dumps(json_file)]) 
+            return Response(request.data, status=status.HTTP_200_OK)    
         elif request.method == 'DELETE':
             cursor = connection.cursor()
-            cursor.execute("DELETE FROM Recipe Where recipeId = %s;", [recipeId])
+            cursor.execute(SQL_DELETE, [recipeId])
             return Response(status=status.HTTP_204_NO_CONTENT)            
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -237,11 +243,13 @@ def plans(request,id):
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['GET','DELETE'])
+@api_view(['GET','PATCH','DELETE'])
 def plan_detail(request,id, planId):
     SQL_GET ="""SELECT c.recipeId
                 FROM decide AS d JOIN WeeklyPlan AS w ON (d.planId = w.planId) JOIN contains AS c ON (w.planId = c.planId)
                 WHERE d.userId = %s AND c.planId = %s;"""
+    SQL_PATCH = "CALL UpdatePlan(%s, %s);"
+    SQL_DELETE = "DELETE FROM WeeklyPlan Where planId = %s;"
     try:
         if request.method == 'GET':
             print(request.data)
@@ -250,10 +258,16 @@ def plan_detail(request,id, planId):
             r = dictfetchall(cursor)
             if not r:
                 raise ObjectDoesNotExist
-            return Response(r)            
+            return Response(r)
+        elif request.method == 'PATCH':
+            cursor = connection.cursor()
+            data=request.data
+            json_file = data["recipeList"]
+            cursor.execute(SQL_PATCH, [planId, json.dumps(json_file)]) 
+            return Response(request.data, status=status.HTTP_200_OK)             
         elif request.method == 'DELETE':
             cursor = connection.cursor()
-            cursor.execute("DELETE FROM WeeklyPlan Where planId = %s;", [planId])
+            cursor.execute(SQL_DELETE, [planId])
             return Response(status=status.HTTP_204_NO_CONTENT)            
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
