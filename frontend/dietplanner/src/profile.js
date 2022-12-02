@@ -10,18 +10,11 @@ const Profile = () => {
     const [calorieRecommand, setCalorieRecommand] = useState(0);
     const history = useHistory();
 
-    const onFormSubmit = (e) =>{
+    const returnHome = (e) =>{
         e.preventDefault();
         history.push("/home");
     }
     //we will fetch data from DB for the first time render this page
-    
-    useEffect(()=>{
-        //TODO: API Pending
-        //First fetch the USER id with their UserID to get Value 
-        getProfile();
-    },[]);
-    
     const getProfile = async () => {
         console.log("Profile GET INIT");
         await axios.get('http://localhost:8000/planner/users/'+ window.userId +'/', {
@@ -40,6 +33,7 @@ const Profile = () => {
                 //set the local value
                 console.log("Profile GET DONE");
                 console.log('username(state)'+userName);
+                
                 setuserName(res.data.username);
                 setEmail(res.data.email);
                 setAge(res.data.age);
@@ -51,10 +45,10 @@ const Profile = () => {
             console.log(err)
         });
     }
-
+    
     return ( 
         <div>
-            <form onSubmit={onFormSubmit}>
+            <form onSubmit={getProfile}>
             <label>userName: </label>
                 <input 
                 type='text' 
@@ -95,8 +89,9 @@ const Profile = () => {
                 value = {calorieRecommand}
                 onChange={(e) => setCalorieRecommand(e.target.value) } 
                 />
-                <button>Back to Home</button>
+                <button>Get Profile Data</button>
             </form>
+            <button onClick={returnHome}>Back to Home</button>
         </div>
      );
 }
