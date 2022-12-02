@@ -20,7 +20,7 @@ const NavBarFunc = () => {
             else{
                 //set the local value
                 console.log("Calorie GET DONE");
-                window.calorieRecommand = res.data.recommend_cal;
+                window.calorieRecommand = res.data[0].recommend_cal;
             }
         })
         .catch(err =>{
