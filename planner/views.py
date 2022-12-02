@@ -243,11 +243,13 @@ def plans(request,id):
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['GET','DELETE'])
+@api_view(['GET','PATCH','DELETE'])
 def plan_detail(request,id, planId):
     SQL_GET ="""SELECT c.recipeId
                 FROM decide AS d JOIN WeeklyPlan AS w ON (d.planId = w.planId) JOIN contains AS c ON (w.planId = c.planId)
                 WHERE d.userId = %s AND c.planId = %s;"""
+    SQL_PATCH = "CALL UpdatePlan(%s, %s);"
+    SQL_DELETE = "DELETE FROM WeeklyPlan Where planId = %s;"
     try:
         if request.method == 'GET':
             print(request.data)
@@ -256,10 +258,16 @@ def plan_detail(request,id, planId):
             r = dictfetchall(cursor)
             if not r:
                 raise ObjectDoesNotExist
-            return Response(r)            
+            return Response(r)
+        elif request.method == 'PATCH':
+            cursor = connection.cursor()
+            data=request.data
+            json_file = data["recipeList"]
+            cursor.execute(SQL_PATCH, [planId, json.dumps(json_file)]) 
+            return Response(request.data, status=status.HTTP_200_OK)             
         elif request.method == 'DELETE':
             cursor = connection.cursor()
-            cursor.execute("DELETE FROM WeeklyPlan Where planId = %s;", [planId])
+            cursor.execute(SQL_DELETE, [planId])
             return Response(status=status.HTTP_204_NO_CONTENT)            
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
