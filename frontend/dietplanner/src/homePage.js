@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import NavBarFunc from "./navBar";
-
+import axios from "axios";
 const HomePage = () => {
     const history = useHistory();
 
