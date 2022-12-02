@@ -53,7 +53,7 @@ const RecipeHome = () => {
         <Col>
           <DataTable
             columns={recipeColumns}
-            API='http://localhost:8000/planner/users/10000/recipes/'
+            API={'http://localhost:8000/planner/users/'+window.userId+'/recipes/'}
             data_id={recipeids}
             deleteAllowed
             resetStatus={reset}
