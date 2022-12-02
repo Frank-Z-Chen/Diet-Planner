@@ -37,7 +37,11 @@ const DataTable = (props) => {
     };
     const onDeleteClickedHandler = () => {
         selected.map( (id) =>
-            axios.delete(props.API + id + '/')
+            axios.delete(props.API + id + '/',{
+                headers:{
+                    'Authorization': window.token
+                }
+            })
                 .then((res) => {console.log(res)})
         );
         setReset(!reset);
@@ -57,7 +61,11 @@ const DataTable = (props) => {
             foodWeights : idsAmount
         };
         history.push("/recipe");
-        await axios.post('http://localhost:8000/planner/users/10000/recipes/',data)
+        await axios.post('http://localhost:8000/planner/users/'+window.userId+'/recipes/',data, {
+            headers:{
+                'Authorization': window.token
+            }
+        })
         .then(res =>{
             console.log(res)
         })
@@ -69,7 +77,11 @@ const DataTable = (props) => {
 
     //*****functions*****
     const getData = async () => {
-        await axios.get(props.API)
+        await axios.get(props.API,{
+            headers:{
+                'Authorization': window.token
+            }
+        })
         .then( (res) =>{ setData(res.data)})
         .catch((error =>{console.log(error)}));
       };

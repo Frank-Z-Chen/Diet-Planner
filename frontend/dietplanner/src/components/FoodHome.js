@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
 import { Col, Container, Row } from "reactstrap";
 import DataTable from "./DataTable";
 import FoodForm from "./FoodForm";

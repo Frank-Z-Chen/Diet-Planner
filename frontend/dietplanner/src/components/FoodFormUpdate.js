@@ -10,40 +10,6 @@ const FoodFormUpdate = props => {
  const [_carb, setCarb] = useState(null);
  const [_fat, setFat] = useState(null);
  const [_protein, setProtein] = useState(null);
- 
- /* 
- useEffect(() => {
-    if (this.props.food) {
-      const { name, carb, fat, protein } = this.props.food;
-      setName(name);
-      setCarb(carb);
-      setFat(fat);
-      setProtein(protein);
-  };
-  */
-
-  const createStudent = e => {
-    e.preventDefault();
-    //this.props.resetState();
-    //this.props.toggle();
-    /*axios.post(API_URL, this.state).then(() => {
-      this.props.resetState();
-      this.props.toggle();
-    });*/
-    console.log("create request send");
-  };
-
-  const editStudent = e => {
-    e.preventDefault();
-    //this.props.resetState();
-    //this.props.toggle();
-    /*axios.put(API_URL + this.state.pk, this.state).then(() => {
-      this.props.resetState();
-      this.props.toggle();
-    });*/
-    console.log("edit request send");
-  };
-
   const onFormSubmit = async (e) =>{
     e.preventDefault();
     const data = {
@@ -54,12 +20,12 @@ const FoodFormUpdate = props => {
       carb: parseFloat(_carb)
     };
     console.log(data)
-//!!!!!!!!!!!!!!!!!!!!!
+
     await axios.patch('http://localhost:8000/planner/foods/'+food_id+"/", 
       data,
       {headers:{"Content-Type" : "application/json"}}
     )
-//!!!!!!!!!!!!!!!!!!!!!
+
     .then(res =>{
       console.log(res);
     })
