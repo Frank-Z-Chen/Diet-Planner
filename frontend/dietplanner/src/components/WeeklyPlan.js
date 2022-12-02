@@ -5,7 +5,7 @@ import request from "./request";
 export default () => {
     const columns = [
         {
-            title: 'recipeNamee',
+            title: 'recipeName',
             dataIndex: 'recipeName',
         },
         {
