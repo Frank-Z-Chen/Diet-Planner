@@ -16,6 +16,7 @@ const Profile = () => {
         history.push("/home");
     }
     //we will fetch data from DB for the first time render this page
+    /*
     const getProfile = async () => {
         console.log("Profile GET INIT");
         await axios.get('http://localhost:8000/planner/users/'+ window.userId +'/', {
@@ -32,8 +33,9 @@ const Profile = () => {
             }
             else{
                 //set the local value
-                setCalorieRecommand(res.data[0].recommend_cal);
-                window.calorieRecommand = res.data[0].recommend_cal;
+                console.log("Profile GET DONE");
+                window.calorieRecommand = res.data.recommend_cal;
+                console.log('Data fetched: '+window.calorieRecommand);
                 
             }
         })
@@ -43,9 +45,17 @@ const Profile = () => {
     }
 
     useEffect(()=>{
-        getProfile();
+        setCalorieRecommand(window.calorieRecommand);
     })
-    
+    /*
+    const updateValue = (res) =>{
+        setuserName(res.data.username);
+        setEmail(res.data.email);
+        setAge(res.data.age);
+        setGender(res.data.gender);
+        setCalorieRecommand(res.data.recommend_cal);
+    }
+    */
     return ( 
         <div>
             <h2>userName:</h2>

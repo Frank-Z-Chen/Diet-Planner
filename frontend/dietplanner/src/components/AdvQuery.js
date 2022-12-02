@@ -2,9 +2,6 @@ import React, { useState,useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import '../style/FoodForm.css';
-import { Label } from "reactstrap";
-import Box from '@mui/material/Box';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 const AdvQuery = e => {
     const {register, handleSubmit } = useForm();

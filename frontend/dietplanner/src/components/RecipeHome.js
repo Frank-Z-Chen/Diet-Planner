@@ -14,14 +14,14 @@ const RecipeHome = () => {
   //variables
   const recipeColumns = [
     { field: 'recipeId', headerName: 'ID', width: 90 },
-    /*
+    
     {
-        field: 'planname',
+        field: 'recipeName',
         headerName: 'Recipe Name',
         width: 150,
         editable: true,
     },
-    */
+   
     {
         field: 'total_carb',
         headerName: 'Recipe Carb.',
