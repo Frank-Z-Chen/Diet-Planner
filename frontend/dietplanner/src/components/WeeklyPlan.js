@@ -10,7 +10,10 @@ export default () => {
         // console.log(data)
     };
     useEffect(() => {
-
+        axios.get('http://localhost:8000/users/1/plans/', { params: { "userName": "user1" } }).then(res => {
+            console.log(res)
+            setData(res.data)
+        })
     }, [])
     const del = () => {
 

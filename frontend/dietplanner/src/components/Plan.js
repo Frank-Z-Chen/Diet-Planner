@@ -43,7 +43,8 @@ export default () => {
         onChange: onSelectChange,
     };
     const confirm = () => {
-        axios.post('http://localhost:8000/', { username: 'jak', userid: 1, recipeid: selectedRowKeys }).then(res => {
+         
+        axios.post('http://localhost:8000/users/1/plans/', { userName: 'user1', recipeList: selectedRowKeys }).then(res => {
             console.log(res)
             message.success('This is a success message');
         })
