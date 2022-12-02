@@ -1,19 +1,69 @@
 import React from "react";
-import AdvQuery from "./AdvQuery";
-import AdvQuery2 from "./AdvQuery2";
-import FoodForm from "./FoodForm";
-import FoodFormUpdate from "./FoodFormUpdate";
 import FoodHome from "./FoodHome";
 import RecipeHome from "./RecipeHome";
-import WeeklyPlan from "./WeeklyPlan"
-import Plan from "./Plan"
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import SignIn from "../signin";
+import NewUser from "../createUser";
+import HomePage from "../homePage";
+import Profile from "../profile";
+import NavBarFunc from "../navBar";
+import RecipeUpdate from "./RecipeUpdate";
+
+window.userName = "";
+window.token = "";
+window.userId = -1;
+window.email = "";
+window.gender = "";
+window.age ="";
+window.calorieRecommand = 0;
+
 class App extends React.Component {
 
   render(){
     return (
-      <div>
-        <WeeklyPlan/>
-      </div>
+      <Router>
+        <Switch>
+          <Route exact path = '/'>
+            <div>
+              <SignIn />
+            </div>
+          </Route>
+          <Route exact path = '/createUser'>
+            <div>
+              <NewUser />
+            </div>
+          </Route>
+          <Route exact path = '/home'>
+            <div>
+              <HomePage />
+            </div>
+          </Route>
+          <Route exact path = '/profile'>
+            <div>
+              <NavBarFunc />
+              <Profile />
+            </div>
+          </Route>
+          <Route exact path = '/food'>
+            <div>
+              <NavBarFunc />
+              <FoodHome />
+            </div>
+          </Route>
+          <Route exact path = '/recipe'>
+            <div>
+              <NavBarFunc />
+              <RecipeHome/>
+            </div>
+          </Route>
+          <Route exact path = '/create_recipe'>
+            <div>
+              <NavBarFunc />
+              <RecipeUpdate />
+            </div>
+          </Route>
+        </Switch>
+      </Router>
     );
   }
 

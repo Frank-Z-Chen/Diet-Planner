@@ -1,28 +1,93 @@
 import axios from "axios";
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-const SignIn = props => {
+const SignIn = () => {
     //const {register, handleSubmit } = useForm();
-    const [userName, setUserName] = useState('');
+    const [email, setEmail] = useState('');
     const [pwd, setPwd] = useState('');
     const [validUserInfo, setvalidUserInfo] = useState(true);
     const history = useHistory();
 
-    const onSignInSubmit = (e) =>{
+    const onSignInSubmit = async (e) =>{
         e.preventDefault();
-        const data = {userName, pwd};
-        console.log("sign In");
-        console.log(data);
+        //construct data post to backend
+        const data = {
+          email:email, 
+          password:pwd
+        };
         
-        setvalidUserInfo(false);
-        window.userName = "shadowjerry";
-        console.log(window.userName);
-        history.push("/home");
+        //TODO: waiting for correct link from backend and set up global value
+        await axios.post('http://localhost:8000/auth/jwt/create/', data)
+        .then(res=>{
+            //if status = 403 then login failed
+            if(res.status === 403){
+              setvalidUserInfo(false);
+            }
+            else{
+                //if login succss, go to home page and set up global token
+                window.token = 'JWT '+res.data.access;
+                //call helper function to set global value
+                fetchUserDataWithToken();
+                //fetchRecCalorie();
+                //after setting up user data, go home page
+                history.push("/home");
+            }
+        })
+        .catch(err =>{
+            // console.log(err);
+            setvalidUserInfo(false);
+        });
     }
-
+    //helper function for setting up global value after user successfully login
+    const fetchUserDataWithToken = async()=>{
+        //use the accepted token to fetch user Data
+        //TODO: validate use of API
+        await axios.get('http://localhost:8000/auth/users/me/',{
+            headers:{
+                'Authorization': window.token
+            }
+        }).then(res=>{
+            window.userName = res.data.username;
+            window.userId = res.data.userid;
+            window.email = res.data.email;
+            window.gender = res.data.gender;
+            window.age =res.data.age;
+            console.log(res);
+        })
+        .catch(err =>{
+            console.log(window.token)
+            console.log(err)
+        });
+    }
+/*
+    const fetchRecCalorie = async () => {
+        console.log("Calorie GET INIT");
+        await axios.get('http://localhost:8000/planner/users/'+ window.userId +'/', {
+            headers:{
+                'Authorization': window.token
+            }
+        })
+        .then(res=>{
+            if(res.status === 403){
+                //error happens back to home page
+                console.log(res.status);
+            }
+            else{
+                //set the local value
+                console.log("Calorie GET DONE");
+                window.calorieRecommand = res.data.recommend_cal;
+                console.log('Data fetched: '+window.calorieRecommand);
+                
+            }
+        })
+        .catch(err =>{
+            console.log(err)
+        });
+    }
+*/
+    //Redirect to a sign up page
     const onSignUpSubmit = (e) =>{
         e.preventDefault();
-        //to redirect to a different page
         history.push("/createUser");
     }
     return (
@@ -32,20 +97,18 @@ const SignIn = props => {
         {!validUserInfo && <h2>Either User Name or Password is Incorrect, try another time!</h2>}
         <form onSubmit = {onSignInSubmit}>
             <h1>User SignIn</h1>
-            <label>User Name</label>
+            <label>Email Address</label>
             <input 
             type='text' 
-            name="userName" 
-            //{...register("foodid", {required: "Required",})} 
+            name="email" 
             required
-            value = {userName}
-            onChange={(e) => setUserName(e.target.value) } 
+            value = {email}
+            onChange={(e) => setEmail(e.target.value) } 
             />
             <label>Password</label>
             <input
             type='text' 
             name="password" 
-            //{...register("name", {required: "Required",})} 
             required
             value = {pwd}
             onChange={(e) => setPwd(e.target.value)} 
@@ -58,25 +121,3 @@ const SignIn = props => {
 }
 
 export default SignIn;
-
-/*
-  const onFormSubmit = async (e) =>{
-    e.preventDefault();
-    const data = {
-      foodid: parseInt(food_id),
-      foodname: _name,
-      fat: parseFloat(_fat),
-      protein: parseFloat(_protein),
-      carb: parseFloat(_carb)
-    };
-    console.log(data)
-
-    await axios.post('http://localhost:8000/planner/foods/', data)
-    .then(res =>{
-      console.log(res)
-    })
-    .catch(err =>{
-      console.log(err)
-    });
-  };
-*/

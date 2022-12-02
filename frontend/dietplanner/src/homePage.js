@@ -1,10 +1,15 @@
-//import React, { useState,useEffect } from "react";
+import React, { useState,useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import NavBarFunc from "./navBar";
-
+import axios from "axios";
 const HomePage = () => {
     const history = useHistory();
-
+/*
+    useEffect(()=>{
+        fetchRecCalorie();
+        console.log('Data fetched: '+window.calorieRecommand);
+    },[]);
+*/
     const goFood = () =>{
         history.push("/food");
     }

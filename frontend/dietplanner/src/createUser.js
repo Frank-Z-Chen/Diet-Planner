@@ -1,5 +1,6 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 
 const NewUser = () => {
     const [UserName, setUserName] = useState("");
@@ -7,24 +8,48 @@ const NewUser = () => {
     const [age, setAge] = useState(0);
     const [gender, setGender] = useState("");
     const [pwd, setPwd] = useState("");
-    const [validUsername, setvalidUsername] = useState(true);
+    const [validUserInput, setvalidvalidUserInput] = useState(true);
     const history = useHistory();
 
-    const onFormSubmit = (e) =>{
+    const onFormSubmit = async (e) =>{
         e.preventDefault();
-        const data = {UserName, pwd, email,age,gender,pwd};
-        console.log("profile Update");
+        //This will be the actual data pass to backend using URL provided
+        const data = {
+            username:UserName, 
+            password:pwd,
+            age:age,
+            gender:gender, 
+            email:email
+            };
+        console.log("data sent to backend");
         console.log(data);
 
         //vlidate user update
-        setvalidUsername(false);
-        //if update succss, go to home page
-        history.push("/home");
+        //TODO: Data sent to backend with above data  
+        await axios.post('http://localhost:8000/auth/users/', data)
+        .then(res=>{
+            console.log(res);
+            //TODO: What should I espect to see as response/acknowleagement that the user create success?
+            if(res.status === 403){ 
+                setvalidvalidUserInput(false);
+            }
+            else{
+                //if update succss, go back to sign in page
+                history.push("/");
+            }
+        })
+        .catch(err =>{
+            console.log(err)
+        });
+    }
+
+    const ClickSignInButton = ()=>{
+        history.push("/");
     }
 
     return ( 
         <div>
-            {!validUsername && <h2>User Name already exist, try other User name!</h2>}
+            {!validUserInput && <h2>User Name already exist, try other User name!</h2>}
             <form onSubmit={onFormSubmit}>
                 <label>User Name</label>
                 <input 
@@ -68,6 +93,7 @@ const NewUser = () => {
                 />
                 <button>Submit</button>
             </form>
+            <button onClick={ClickSignInButton}>Back to Sign In</button>
         </div>
      );
 }
