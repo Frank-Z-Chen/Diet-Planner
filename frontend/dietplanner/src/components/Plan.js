@@ -48,7 +48,6 @@ export default () => {
          
         request.post(`/planner/users/10000/plans/`, { userName: 'user1', recipeList: selectedRowKeys }).then(res => {
             console.log(res)
-            
             message.success('This is a success message');
         })
     }
