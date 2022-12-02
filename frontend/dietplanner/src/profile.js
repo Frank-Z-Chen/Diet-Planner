@@ -7,7 +7,7 @@ const Profile = () => {
     const [email, setEmail] = useState(window.email);
     const [age, setAge] = useState(window.age);
     const [gender, setGender] = useState(window.gender);
-    const [calorieRecommand, setCalorieRecommand] = useState(0);
+    const [calorieRecommand, setCalorieRecommand] = useState(window.calorieRecommand);
     const history = useHistory();
 
     const returnHome = (e) =>{
@@ -15,6 +15,7 @@ const Profile = () => {
         history.push("/home");
     }
     //we will fetch data from DB for the first time render this page
+    /*
     const getProfile = async () => {
         console.log("Profile GET INIT");
         await axios.get('http://localhost:8000/planner/users/'+ window.userId +'/', {
@@ -64,9 +65,8 @@ const Profile = () => {
             <p>{age}</p>
             <h2>gender:</h2>
             <p>{gender}</p>
-            <h2>calorieRecommand,if saw -1, then get data failed:</h2>
+            <h2>calorieRecommand:</h2>
             <p>{calorieRecommand}</p>
-            <button onClick={getProfile}>Get Profile Data</button>
             <button onClick={returnHome}>Back to Home</button>
         </div>
      );

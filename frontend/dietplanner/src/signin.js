@@ -28,6 +28,7 @@ const SignIn = () => {
                 window.token = 'JWT '+res.data.access;
                 //call helper function to set global value
                 fetchUserDataWithToken();
+                fetchRecCalorie();
                 //after setting up user data, go home page
                 history.push("/home");
             }
@@ -54,6 +55,31 @@ const SignIn = () => {
         })
         .catch(err =>{
             console.log(window.token)
+            console.log(err)
+        });
+    }
+
+    const fetchRecCalorie = async () => {
+        console.log("Calorie GET INIT");
+        await axios.get('http://localhost:8000/planner/users/'+ window.userId +'/', {
+            headers:{
+                'Authorization': window.token
+            }
+        })
+        .then(res=>{
+            if(res.status === 403){
+                //error happens back to home page
+                console.log(res.status);
+            }
+            else{
+                //set the local value
+                console.log("Calorie GET DONE");
+                window.calorieRecommand = res.data.recommend_cal;
+                console.log('Data fetched: '+window.calorieRecommand);
+                
+            }
+        })
+        .catch(err =>{
             console.log(err)
         });
     }
