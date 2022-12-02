@@ -39,7 +39,9 @@ const NavBarFunc = () => {
         history.push("/");
     }
     const goProfile = () =>{
-        fetchRecCalorie();
+        if(window.userId != -1){
+            fetchRecCalorie();
+        }
         history.push("/profile");
     }
     const goHomePage = () =>{

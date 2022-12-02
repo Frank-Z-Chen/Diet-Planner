@@ -4,34 +4,12 @@ import NavBarFunc from "./navBar";
 import axios from "axios";
 const HomePage = () => {
     const history = useHistory();
-
+/*
     useEffect(()=>{
         fetchRecCalorie();
         console.log('Data fetched: '+window.calorieRecommand);
     },[]);
-
-    const fetchRecCalorie = async () => {
-        console.log("Calorie GET INIT");
-        await axios.get('http://localhost:8000/planner/users/'+ window.userId +'/', {
-            headers:{
-                'Authorization': window.token
-            }
-        })
-        .then(res=>{
-            if(res.status === 403){
-                //error happens back to home page
-                console.log(res.status);
-            }
-            else{
-                //set the local value
-                console.log("Calorie GET DONE");
-                window.calorieRecommand = res.data.recommend_cal;
-            }
-        })
-        .catch(err =>{
-            console.log(err)
-        });
-    }
+*/
     const goFood = () =>{
         history.push("/food");
     }
