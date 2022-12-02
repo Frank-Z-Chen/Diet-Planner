@@ -15,9 +15,6 @@ const SignIn = () => {
           email:email, 
           password:pwd
         };
-
-        console.log("sign In");
-        console.log(data);
         
         //TODO: waiting for correct link from backend and set up global value
         await axios.post('http://localhost:8000/auth/jwt/create/', data)
@@ -28,7 +25,7 @@ const SignIn = () => {
             }
             else{
                 //if login succss, go to home page and set up global token
-                window.token = res.data.access;
+                window.token = 'JWT '+res.data.access;
                 //call helper function to set global value
                 fetchUserDataWithToken();
                 //after setting up user data, go home page
@@ -48,13 +45,15 @@ const SignIn = () => {
                 'Authorization': window.token
             }
         }).then(res=>{
-            window.userName = res.data.userName;
-            window.userId = res.data.userId;
+            window.userName = res.data.username;
+            window.userId = res.data.userid;
             window.email = res.data.email;
             window.gender = res.data.gender;
             window.age =res.data.age;
+            console.log(res);
         })
         .catch(err =>{
+            console.log(window.token)
             console.log(err)
         });
     }
