@@ -63,7 +63,7 @@ const Profile = () => {
             else{
                 //set the local value
                 console.log("Profile GET DONE");
-                window.calorieRecommand = res.data.recommend_cal;
+                window.calorieRecommand = res.data[0].recommend_cal;
                 console.log('Data fetched: '+window.calorieRecommand);
                 
             }
