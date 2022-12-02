@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 const Profile = () => {
-    const [userName, setuserName] = useState("No data yet");
-    const [email, setEmail] = useState("No data yet");
-    const [age, setAge] = useState(0);
-    const [gender, setGender] = useState("No data yet");
+    const [userName, setuserName] = useState(window.userName);
+    const [email, setEmail] = useState(window.email);
+    const [age, setAge] = useState(window.age);
+    const [gender, setGender] = useState(window.gender);
     const [calorieRecommand, setCalorieRecommand] = useState(0);
     const history = useHistory();
 
@@ -32,8 +32,8 @@ const Profile = () => {
             else{
                 //set the local value
                 console.log("Profile GET DONE");
-                updateValue(res);
-                console.log('username(state)'+userName);
+                window.calorieRecommand = res.data.recommend_cal;
+                console.log('Data fetched: '+window.calorieRecommand);
                 
             }
         })
@@ -41,6 +41,11 @@ const Profile = () => {
             console.log(err)
         });
     }
+
+    useEffect(()=>{
+        setCalorieRecommand(window.calorieRecommand);
+    })
+    /*
     const updateValue = (res) =>{
         setuserName(res.data.username);
         setEmail(res.data.email);
@@ -48,7 +53,7 @@ const Profile = () => {
         setGender(res.data.gender);
         setCalorieRecommand(res.data.recommend_cal);
     }
-    
+    */
     return ( 
         <div>
             <h2>userName:</h2>

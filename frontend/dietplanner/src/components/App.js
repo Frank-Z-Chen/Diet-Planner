@@ -15,6 +15,7 @@ window.userId = -1;
 window.email = "";
 window.gender = "";
 window.age ="";
+window.calorieRecommand = 0;
 
 class App extends React.Component {
 

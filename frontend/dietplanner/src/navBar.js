@@ -10,6 +10,7 @@ const NavBarFunc = () => {
         window.email = "";
         window.gender = "";
         window.age ="";
+        window.calorieRecommand = -1;
         history.push("/");
     }
     const goProfile = () =>{
