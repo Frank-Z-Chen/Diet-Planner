@@ -28,7 +28,7 @@ const Profile = () => {
         console.log(data);
 
         //vlidate user update
-        await axios.post('http://localhost:8000/planner/users/'+ window.userId +'/', data,{
+        await axios.patch('http://localhost:8000/planner/users/'+ window.userId +'/', data,{
             headers:{
                 'Authorization': window.token
             }
