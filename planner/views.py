@@ -185,7 +185,7 @@ def recipes(request,id):
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['GET', 'DELETE'])
+@api_view(['GET', 'PATCH','DELETE'])
 def recipe_detail(request,id, recipeId):
     SQL_GET =   """
                 SELECT recipeId, recipeName, SUM(fat * weight) AS total_fat, SUM(protein * weight) AS total_protein, SUM(carb * weight) AS total_carb
@@ -193,6 +193,8 @@ def recipe_detail(request,id, recipeId):
                 WHERE userId = %s AND recipeId = %s
                 GROUP BY recipeId
                 """
+    SQL_PATCH = "CALL UpdateRecipe(%s, %s, %s)"
+    SQL_DELETE = "DELETE FROM Recipe Where recipeId = %s;"
     try:
         if request.method == 'GET':
             cursor = connection.cursor()
@@ -201,10 +203,16 @@ def recipe_detail(request,id, recipeId):
             r = dictfetchall(cursor)
             if not r:
                 raise ObjectDoesNotExist
-            return Response(r)    
+            return Response(r)
+        elif request.method == 'PATCH':
+            cursor = connection.cursor()
+            data=request.data
+            json_file = data["foodWeights"]
+            cursor.execute(SQL_PATCH, [recipeId, data["recipeName"], json.dumps(json_file)]) 
+            return Response(request.data, status=status.HTTP_200_OK)    
         elif request.method == 'DELETE':
             cursor = connection.cursor()
-            cursor.execute("DELETE FROM Recipe Where recipeId = %s;", [recipeId])
+            cursor.execute(SQL_DELETE, [recipeId])
             return Response(status=status.HTTP_204_NO_CONTENT)            
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
