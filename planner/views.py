@@ -187,10 +187,24 @@ def recipes(request,id):
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['DELETE'])
-def delete_recipe(request,id, recipeId):
+@api_view(['GET', 'DELETE'])
+def recipe_detail(request,id, recipeId):
+    SQL_GET =   """
+                SELECT recipeId, SUM(fat * weight) AS total_fat, SUM(protein * weight) AS total_protein, SUM(carb * weight) AS total_carb
+                FROM createRecipe NATURAL JOIN Recipe NATURAL JOIN UseFood NATURAL JOIN Food
+                WHERE userId = %s AND recipeId = %s
+                GROUP BY recipeId
+                """
     try:
-        if request.method == 'DELETE':
+        if request.method == 'GET':
+            cursor = connection.cursor()
+            data = request.data
+            cursor.execute(SQL_GET, [id, recipeId])
+            r = dictfetchall(cursor)
+            if not r:
+                raise ObjectDoesNotExist
+            return Response(r)    
+        elif request.method == 'DELETE':
             cursor = connection.cursor()
             cursor.execute("DELETE FROM Recipe Where recipeId = %s;", [recipeId])
             return Response(status=status.HTTP_204_NO_CONTENT)            
