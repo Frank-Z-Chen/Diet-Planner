@@ -34,7 +34,8 @@ const SignIn = () => {
             }
         })
         .catch(err =>{
-            console.log(err)
+            // console.log(err);
+            setvalidUserInfo(false);
         });
     }
     //helper function for setting up global value after user successfully login

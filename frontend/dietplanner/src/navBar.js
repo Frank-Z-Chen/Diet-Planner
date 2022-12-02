@@ -4,7 +4,7 @@ import axios from "axios";
 
 const NavBarFunc = () => {
     const history = useHistory();
-
+/*
     const fetchRecCalorie = async () => {
         console.log("Calorie GET INIT");
         await axios.get('http://localhost:8000/planner/users/'+ window.userId +'/', {
@@ -20,14 +20,14 @@ const NavBarFunc = () => {
             else{
                 //set the local value
                 console.log("Calorie GET DONE");
-                window.calorieRecommand = res.data.recommend_cal;
+                window.calorieRecommand = res.data[0].recommend_cal;
             }
         })
         .catch(err =>{
             console.log(err)
         });
     }
-
+*/
     const goSignOut = () =>{
         window.userName = "";
         window.token = "";
@@ -39,9 +39,6 @@ const NavBarFunc = () => {
         history.push("/");
     }
     const goProfile = () =>{
-        if(window.userId != -1){
-            fetchRecCalorie();
-        }
         history.push("/profile");
     }
     const goHomePage = () =>{
