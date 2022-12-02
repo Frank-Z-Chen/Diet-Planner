@@ -24,12 +24,10 @@ const NewUser = () => {
         console.log("data sent to backend");
         console.log(data);
 
-        //vlidate user update
-        //TODO: Data sent to backend with above data  
+        //Process user create  
         await axios.post('http://localhost:8000/auth/users/', data)
         .then(res=>{
             console.log(res);
-            //TODO: What should I espect to see as response/acknowleagement that the user create success?
             if(res.status === 403){ 
                 setvalidvalidUserInput(false);
             }
@@ -39,10 +37,12 @@ const NewUser = () => {
             }
         })
         .catch(err =>{
-            console.log(err)
+            console.log(err);
+            setvalidvalidUserInput(false);
         });
     }
 
+    //For back to sign in page
     const ClickSignInButton = ()=>{
         history.push("/");
     }

@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+
 const SignIn = () => {
-    //const {register, handleSubmit } = useForm();
     const [email, setEmail] = useState('');
     const [pwd, setPwd] = useState('');
     const [validUserInfo, setvalidUserInfo] = useState(true);
@@ -16,7 +16,7 @@ const SignIn = () => {
           password:pwd
         };
         
-        //TODO: waiting for correct link from backend and set up global value
+        //Send login info to backend and set up global vairable
         await axios.post('http://localhost:8000/auth/jwt/create/', data)
         .then(res=>{
             //if status = 403 then login failed
@@ -28,20 +28,18 @@ const SignIn = () => {
                 window.token = 'JWT '+res.data.access;
                 //call helper function to set global value
                 fetchUserDataWithToken();
-                //fetchRecCalorie();
                 //after setting up user data, go home page
                 history.push("/home");
             }
         })
         .catch(err =>{
-            // console.log(err);
+            //Invalid user login 401 while go here
             setvalidUserInfo(false);
         });
     }
     //helper function for setting up global value after user successfully login
     const fetchUserDataWithToken = async()=>{
         //use the accepted token to fetch user Data
-        //TODO: validate use of API
         await axios.get('http://localhost:8000/auth/users/me/',{
             headers:{
                 'Authorization': window.token
@@ -52,39 +50,13 @@ const SignIn = () => {
             window.email = res.data.email;
             window.gender = res.data.gender;
             window.age =res.data.age;
-            console.log(res);
         })
         .catch(err =>{
-            console.log(window.token)
-            console.log(err)
+            console.log(err);
+            setvalidUserInfo(false);
         });
     }
-/*
-    const fetchRecCalorie = async () => {
-        console.log("Calorie GET INIT");
-        await axios.get('http://localhost:8000/planner/users/'+ window.userId +'/', {
-            headers:{
-                'Authorization': window.token
-            }
-        })
-        .then(res=>{
-            if(res.status === 403){
-                //error happens back to home page
-                console.log(res.status);
-            }
-            else{
-                //set the local value
-                console.log("Calorie GET DONE");
-                window.calorieRecommand = res.data.recommend_cal;
-                console.log('Data fetched: '+window.calorieRecommand);
-                
-            }
-        })
-        .catch(err =>{
-            console.log(err)
-        });
-    }
-*/
+
     //Redirect to a sign up page
     const onSignUpSubmit = (e) =>{
         e.preventDefault();

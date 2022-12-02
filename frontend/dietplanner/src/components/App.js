@@ -9,6 +9,7 @@ import Profile from "../profile";
 import NavBarFunc from "../navBar";
 import RecipeUpdate from "./RecipeUpdate";
 
+//Global variable to store user info
 window.userName = "";
 window.token = "";
 window.userId = -1;
@@ -35,6 +36,7 @@ class App extends React.Component {
           </Route>
           <Route exact path = '/home'>
             <div>
+              <NavBarFunc />
               <HomePage />
             </div>
           </Route>

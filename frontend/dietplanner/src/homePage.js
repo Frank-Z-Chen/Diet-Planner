@@ -1,15 +1,8 @@
-import React, { useState,useEffect } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
-import NavBarFunc from "./navBar";
-import axios from "axios";
 const HomePage = () => {
     const history = useHistory();
-/*
-    useEffect(()=>{
-        fetchRecCalorie();
-        console.log('Data fetched: '+window.calorieRecommand);
-    },[]);
-*/
+
     const goFood = () =>{
         history.push("/food");
     }
@@ -21,7 +14,6 @@ const HomePage = () => {
     }
     return (
         <div className="HomePage">
-            <NavBarFunc />
             <h2>Manage Food</h2>
             <button onClick={goFood}>Go</button>
             <h2>Manage Weekly Plan</h2>
