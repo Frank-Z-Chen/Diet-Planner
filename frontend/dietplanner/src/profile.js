@@ -34,8 +34,8 @@ const Profile = () => {
                 //set the local value
                 console.log("Profile GET DONE");
                 //window.calorieRecommand = res.data.recommend_cal;
-                setCalorieRecommand(res.data.recommend_cal);
-                window.calorieRecommand = res.data.recommend_cal;
+                setCalorieRecommand(res.data[0].recommend_cal);
+                window.calorieRecommand = res.data[0].recommend_cal;
                 console.log('Data fetched: '+window.calorieRecommand);
                 
             }
@@ -46,7 +46,7 @@ const Profile = () => {
     }
 
     useEffect(()=>{
-        setCalorieRecommand(window.calorieRecommand);
+        getProfile();
     })
     /*
     const updateValue = (res) =>{
