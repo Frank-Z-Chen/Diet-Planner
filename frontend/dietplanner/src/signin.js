@@ -28,7 +28,7 @@ const SignIn = () => {
                 window.token = 'JWT '+res.data.access;
                 //call helper function to set global value
                 fetchUserDataWithToken();
-                fetchRecCalorie();
+                //fetchRecCalorie();
                 //after setting up user data, go home page
                 history.push("/home");
             }
@@ -58,7 +58,7 @@ const SignIn = () => {
             console.log(err)
         });
     }
-
+/*
     const fetchRecCalorie = async () => {
         console.log("Calorie GET INIT");
         await axios.get('http://localhost:8000/planner/users/'+ window.userId +'/', {
@@ -83,7 +83,7 @@ const SignIn = () => {
             console.log(err)
         });
     }
-
+*/
     //Redirect to a sign up page
     const onSignUpSubmit = (e) =>{
         e.preventDefault();
