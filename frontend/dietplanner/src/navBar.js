@@ -4,8 +4,12 @@ import { Navbar } from "reactstrap";
 const NavBarFunc = () => {
     const history = useHistory();
     const goSignOut = () =>{
-        window.userName = "SignedOut";
-        console.log(window.userName);
+        window.userName = "";
+        window.token = "";
+        window.userId = -1;
+        window.email = "";
+        window.gender = "";
+        window.age ="";
         history.push("/");
     }
     const goProfile = () =>{

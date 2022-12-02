@@ -4,50 +4,41 @@ import NavBarFunc from "./navBar";
 import axios from "axios";
 
 const Profile = () => {
-    const [UserName, setUserName] = useState(window.UserName);
+    const [userName, setuserName] = useState("");
     const [email, setEmail] = useState("");
     const [age, setAge] = useState(0);
     const [gender, setGender] = useState("");
-    const [pwd, setPwd] = useState("");
-    const [validUsername, setvalidUsername] = useState(true);
+    const [calorieRecommand, setCalorieRecommand] = useState(0);
     const history = useHistory();
 
-    const onFormSubmit = async (e) =>{
+    const onFormSubmit = (e) =>{
         e.preventDefault();
-        const data = {
-            userName:UserName, 
-            password:pwd, 
-            userEmail:email,
-            age:age,
-            gender:gender};
-        console.log(data);
-
-        //vlidate user update
+        history.push("/home");
+    }
+    //we will fetch data from DB for the first time render this page
+    
+    useEffect(async ()=>{
         //TODO: API Pending
-        await axios.post('http://localhost:8000/planner/foods/', data)
-        .then(res=>{
-            console.log(res);
-            setvalidUsername(res.data);
-            if(validUsername){
-                //if update succss, go to home page
-                history.push("/home");
+        //First fetch the USER id with their UserID to get Value 
+        await axios.get('http://localhost:8000/planner/users/'+ window.userId +'/', {
+            headers:{
+                'Authorization': window.token
             }
         })
-        .catch(err =>{
-            console.log(err)
-        });
-    }
-
-    useEffect(async ()=>{
-        //we will fetch data from DB for the first time
-        //TODO: API Pending
-        await axios.get('http://localhost:8000/planner/foods/')
         .then(res=>{
             console.log(res);
-            setvalidUsername(res.data);
-            if(validUsername){
-                //if update succss, go to home page
-                history.push("/home");
+            if(res.status == 403){
+                //error happens back to home page
+                console.log(res.status);
+                setCalorieRecommand(-1);
+            }
+            else{
+                //set the local value
+                setuserName(res.data.userId);
+                setEmail(res.data.email);
+                setAge(res.data.age);
+                setGender(res.data.gender);
+                setCalorieRecommand(res.data.recommend_cal);
             }
         })
         .catch(err =>{
@@ -57,16 +48,14 @@ const Profile = () => {
     
     return ( 
         <div>
-            <NavBarFunc />
-            {!validUsername && <h2>Update Failed, please try again!</h2>}
             <form onSubmit={onFormSubmit}>
-                <label>Password</label>
+            <label>userName: </label>
                 <input 
                 type='text' 
-                name="password" 
+                name="userName" 
                 required
-                value = {pwd}
-                onChange={(e) => setPwd(e.target.value) } 
+                value = {userName}
+                onChange={(e) => setuserName(e.target.value) } 
                 />
                 <label>Email</label>
                 <input 
@@ -92,7 +81,15 @@ const Profile = () => {
                 value = {gender}
                 onChange={(e) => setGender(e.target.value) } 
                 />
-                <button>Submit</button>
+                <label>calorieRecommand(-1 means fetching failed)</label>
+                <input 
+                type='number' 
+                name="calorieRecommand" 
+                required
+                value = {calorieRecommand}
+                onChange={(e) => setCalorieRecommand(e.target.value) } 
+                />
+                <button>Back to Home</button>
             </form>
         </div>
      );
