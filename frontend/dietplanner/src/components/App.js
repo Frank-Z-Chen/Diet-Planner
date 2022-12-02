@@ -8,9 +8,10 @@ import HomePage from "../homePage";
 import Profile from "../profile";
 import NavBarFunc from "../navBar";
 import RecipeUpdate from "./RecipeUpdate";
-
+import Plan from "./Plan";
+import WeeklyPlan from "./WeeklyPlan"
 window.userName = "";
-window.token = "";
+window.token = "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcwMzEyOTI0LCJqdGkiOiI5NGMyMjE5ZWM4ZGU0ZWQ1OWE4NWFjYmRhNGNjY2VkZiIsInVzZXJfaWQiOiJ1c2VyMkBkb21haW4uY29tIn0.hiaeqXDB8EgEF234nVC8RVy-HVd6lfIlZZXlk-sFP8w";
 window.userId = -1;
 window.email = "";
 window.gender = "";
@@ -21,49 +22,55 @@ class App extends React.Component {
 
   render(){
     return (
-      <Router>
-        <Switch>
-          <Route exact path = '/'>
-            <div>
-              <SignIn />
-            </div>
-          </Route>
-          <Route exact path = '/createUser'>
-            <div>
-              <NewUser />
-            </div>
-          </Route>
-          <Route exact path = '/home'>
-            <div>
-              <HomePage />
-            </div>
-          </Route>
-          <Route exact path = '/profile'>
-            <div>
-              <NavBarFunc />
-              <Profile />
-            </div>
-          </Route>
-          <Route exact path = '/food'>
-            <div>
-              <NavBarFunc />
-              <FoodHome />
-            </div>
-          </Route>
-          <Route exact path = '/recipe'>
-            <div>
-              <NavBarFunc />
-              <RecipeHome/>
-            </div>
-          </Route>
-          <Route exact path = '/create_recipe'>
-            <div>
-              <NavBarFunc />
-              <RecipeUpdate />
-            </div>
-          </Route>
-        </Switch>
-      </Router>
+      <div>
+      <Plan/>
+
+      <WeeklyPlan/>
+      </div>
+
+      // <Router>
+      //   <Switch>
+      //     <Route exact path = '/'>
+      //       <div>
+      //         <SignIn />
+      //       </div>
+      //     </Route>
+      //     <Route exact path = '/createUser'>
+      //       <div>
+      //         <NewUser />
+      //       </div>
+      //     </Route>
+      //     <Route exact path = '/home'>
+      //       <div>
+      //         <HomePage />
+      //       </div>
+      //     </Route>
+      //     <Route exact path = '/profile'>
+      //       <div>
+      //         <NavBarFunc />
+      //         <Profile />
+      //       </div>
+      //     </Route>
+      //     <Route exact path = '/food'>
+      //       <div>
+      //         <NavBarFunc />
+      //         <FoodHome />
+      //       </div>
+      //     </Route>
+      //     <Route exact path = '/recipe'>
+      //       <div>
+      //         <NavBarFunc />
+      //         <RecipeHome/>
+      //       </div>
+      //     </Route>
+      //     <Route exact path = '/create_recipe'>
+      //       <div>
+      //         <NavBarFunc />
+      //         <RecipeUpdate />
+      //       </div>
+      //     </Route>
+      //   </Switch>
+      // </Router>
     );
   }
 

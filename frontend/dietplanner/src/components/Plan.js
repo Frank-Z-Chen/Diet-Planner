@@ -1,29 +1,31 @@
 import axios from "axios"
+import request from "./request"
 import { useState, useEffect } from "react"
 import { Checkbox, Button,message ,Table} from 'antd';
 export default () => {
     const columns = [
         {
-            title: 'foodname',
-            dataIndex: 'foodname',
+            title: 'recipeNamee',
+            dataIndex: 'recipeName',
         },
         {
-            title: 'fat',
-            dataIndex: 'fat',
+            title: 'total_fat',
+            dataIndex: 'total_fat',
         },
         {
-            title: 'protein',
-            dataIndex: 'protein',
+            title: 'total_protein',
+            dataIndex: 'total_protein',
         },
         {
-            title: 'carb',
-            dataIndex: 'carb',
+            title: 'total_carb',
+            dataIndex: 'total_carb',
         },
     ];
     const [data, setData] = useState([])
     useEffect(() => {
         setLoading(true);
-        axios.get('http://localhost:8000/planner/foods').then(res => {
+        request.get('/planner/users/10000/recipes', 
+).then(res => {
             // console.log(res)
             setData(res.data)
             setSelectedRowKeys([]);
@@ -44,7 +46,7 @@ export default () => {
     };
     const confirm = () => {
          
-        axios.post('http://localhost:8000/planner/users/10000/plans/', { userName: 'user1', recipeList: selectedRowKeys }).then(res => {
+        request.post(`/planner/users/10000/plans/`, { userName: 'user1', recipeList: selectedRowKeys }).then(res => {
             console.log(res)
             
             message.success('This is a success message');
@@ -62,7 +64,7 @@ export default () => {
                     confirm
                 </Button>
             </div>
-            <Table rowSelection={rowSelection} rowKey={record => record.foodid} columns={columns} dataSource={data} />
+            <Table rowSelection={rowSelection} rowKey={record => record.recipeId} columns={columns} dataSource={data} />
         </div>
     );
 }
