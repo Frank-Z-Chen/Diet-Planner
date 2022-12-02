@@ -34,13 +34,13 @@ export default () => {
         
     }
     useEffect(() => {
-        request.get('/planner/users/10000/plans').then(res => {
+        request.get('/planner/users/'+ window.userId+ '/plans').then(res => {
             console.log(res)
             setPlanId(res.data)
             let arr = res.data.map(val => {
-                return request.get(`planner/users/10000/plans/${val.planId}`)
+                return request.get(`planner/users/`+ window.userId+ `/plans/${val.planId}`)
             })
-            Promise.all(arr).then(res => {  let arr = res.map(val => (val.data.map(val => { return request.get(`planner/users/10000/recipes/${val.recipeId}`) })))
+            Promise.all(arr).then(res => {  let arr = res.map(val => (val.data.map(val => { return request.get('planner/users/'+ window.userId+`/recipes/${val.recipeId}`) })))
             // arr=arr.map(val=>)
             let arrData = []
             for (let i in arr) {
@@ -62,7 +62,7 @@ export default () => {
         })
     }, [])
     const del = () => {
-        request.delete(`planner/users/10000/plans/${values[0]}`).then(res => {
+        request.delete(`planner/users/`+ window.userId+ `/plans/${values[0]}`).then(res => {
             console.log(res)
             //message.success('This is a success message');
         })
@@ -72,7 +72,13 @@ export default () => {
             
             <Checkbox.Group style={{ width: '100%', overflowX: 'scroll', display: "flex" }} onChange={onChange}>
             {data.map((val, i) => (<div key={i} style={{ marginRight:'15px',border:'1p solid #000'}}>
-                    <Checkbox ckbox value={planId[i].planId}></Checkbox>
+                    <div>
+                        <Checkbox ckbox value={planId[i].planId}></Checkbox>
+                        <label for="scales">PlanId:{planId[i].planId}</label>
+
+                    </div>
+                    
+
                     
                     {/* {val.map((val, i) => (<div key={val.recipeId}>
                         <div>{val.recipeName}</div>
