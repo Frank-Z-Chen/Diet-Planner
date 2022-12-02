@@ -4,19 +4,48 @@ import axios from "axios";
 
 const Profile = () => {
     const [userName, setuserName] = useState(window.userName);
+    const [pwd, setPwd] = useState("");
     const [email, setEmail] = useState(window.email);
     const [age, setAge] = useState(window.age);
     const [gender, setGender] = useState(window.gender);
     const [calorieRecommand, setCalorieRecommand] = useState(window.calorieRecommand);
     const [userId, setUserId] = useState(window.userId);
+    const [processing, setProcessing] = useState(false);
     const history = useHistory();
 
     const returnHome = (e) =>{
         e.preventDefault();
         history.push("/home");
     }
+    const onFormSubmit = async (e)=>{
+        e.preventDefault();
+        setProcessing(true);
+        const data = {
+            userName:userName, 
+            password:pwd, 
+            age:age,
+            gender:gender};
+        console.log(data);
+
+        //vlidate user update
+        await axios.post('http://localhost:8000/planner/users/'+ window.userId +'/', data,{
+            headers:{
+                'Authorization': window.token
+            }
+        })
+        .then(res=>{
+            console.log(res);
+            console.log("Update finished");
+            getProfile();
+            console.log("recCal calculate finished");
+            setProcessing(false);
+        })
+        .catch(err =>{
+            console.log(err);
+            setProcessing(false);
+        });
+    }
     //we will fetch data from DB for the first time render this page
-    /*
     const getProfile = async () => {
         console.log("Profile GET INIT");
         await axios.get('http://localhost:8000/planner/users/'+ window.userId +'/', {
@@ -45,19 +74,47 @@ const Profile = () => {
     }
 
     useEffect(()=>{
-        setCalorieRecommand(window.calorieRecommand);
-    })
-    /*
-    const updateValue = (res) =>{
-        setuserName(res.data.username);
-        setEmail(res.data.email);
-        setAge(res.data.age);
-        setGender(res.data.gender);
-        setCalorieRecommand(res.data.recommend_cal);
-    }
-    */
+        getProfile();
+    },[])
+    
     return ( 
         <div>
+            {processing && <h2>Processing data, please wait</h2>}
+            <form onSubmit={onFormSubmit}>
+                <label>userName</label>
+                <input 
+                type='text' 
+                name="userName" 
+                required
+                value = {userName}
+                onChange={(e) => setuserName(e.target.value) } 
+                />
+                <label>password</label>
+                <input 
+                type='text' 
+                name="password" 
+                required
+                value = {pwd}
+                onChange={(e) => setPwd(e.target.value) } 
+                />
+                <label>Age</label>
+                <input 
+                type='number' 
+                name="age" 
+                required
+                value = {age}
+                onChange={(e) => setAge(e.target.value) } 
+                />
+                <label>Gender</label>
+                <input 
+                type='text' 
+                name="gender" 
+                required
+                value = {gender}
+                onChange={(e) => setGender(e.target.value) } 
+                />
+                <button>Submit Change</button>
+            </form>
             <h2>userName:</h2>
             <p>{userName}</p>
             <h2>email:</h2>
