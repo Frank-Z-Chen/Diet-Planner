@@ -7,8 +7,7 @@ const AvgCalories = props => {
   const {register, handleSubmit } = useForm();
  const [_ageUB, setAgeUB] = useState(null);
  const [_ageLB, setAgeLB] = useState(null);
- const [_gender, setGender] = useState("M");
- const [_result, setResult] = useState({});
+ const [_gender, setGender] = useState(null);
  
  /* 
  useEffect(() => {

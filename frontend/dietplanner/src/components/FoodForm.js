@@ -27,8 +27,9 @@ const FoodForm = (props) => {
       protein: parseFloat(_protein),
       carb: parseFloat(_carb)
     };
-    
-    await axios.post('http://localhost:8000/planner/foods/',data)
+    console.log(data)
+
+    await axios.post('http://localhost:8000/planner/foods/', data)
     .then(res =>{
       console.log(res)
     })

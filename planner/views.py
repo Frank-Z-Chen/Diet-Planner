@@ -6,6 +6,7 @@ from rest_framework import status
 from planner.models import *
 from .serializers import FoodSerializer
 from django.core.exceptions import ObjectDoesNotExist
+import json 
 
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
@@ -17,6 +18,8 @@ def dictfetchall(cursor):
 
 @api_view(['GET','POST'])
 def show_foods(request):
+    # if request.user == "AnonymousUser":
+    #     return Response(status=status.HTTP_403_FORBIDDEN)
     try:
         if request.method == 'GET':
             qs = Food.objects.raw("SELECT * FROM Food")
@@ -80,17 +83,20 @@ def food_detail(request, id):
     
 #     return Response(r)
 
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM Food WHERE foodId = %s", [id])
-    r = cursor.fetchone()
-    return Response(r)
+    # cursor = connection.cursor()
+    # cursor.execute("SELECT * FROM Food WHERE foodId = %s", [id])
+    # r = cursor.fetchone()
+    # return Response(r)
 
 
 
 
 @api_view(['PATCH'])
 def avg_cal_for_diff_age_in_range(request):
-    SQL = "SELECT age, avg(calories) AS Average_Kal FROM GoalMadeByUser NATURAL JOIN (Select age, userId From User WHERE gender = %s AND age <= %s AND age >= %s) AS temp GROUP BY age ORDER BY age;"
+    SQL ="""SELECT age, avg(calories) AS Average_Kal 
+            FROM GoalMadeByUser NATURAL JOIN (Select age, userId From User WHERE gender = %s AND age <= %s AND age >= %s) AS temp 
+            GROUP BY age 
+            ORDER BY age;"""
     try:
         if request.method == 'PATCH':
             print(request.data)
@@ -110,11 +116,13 @@ def avg_cal_for_diff_age_in_range(request):
 
 @api_view(['PATCH'])
 def total_recipe_cal(request):
-    SQL = "SELECT r.recipeName AS Recipe_Name, SUM(f.UnitKcal * u.weight) AS Total_Calories FROM Recipe r NATURAL JOIN UseFood u JOIN (SELECT foodId, (fat*9+protein*4+carb*4) AS UnitKcal FROM Food) AS f ON u.foodId = f.foodId WHERE r.recipeName = %s GROUP BY u.recipeId;"
+    SQL = """SELECT r.recipeName AS Recipe_Name, SUM(f.UnitKcal * u.weight) AS Total_Calories 
+            FROM Recipe r NATURAL JOIN UseFood u JOIN (SELECT foodId, (fat*9+protein*4+carb*4) AS UnitKcal FROM Food) AS f ON u.foodId = f.foodId 
+            WHERE r.recipeName = %s 
+            GROUP BY u.recipeId;"""
     
     try:
         if request.method == 'PATCH':
-            print(request.data)
             cursor = connection.cursor()
             data = request.data
             cursor.execute(SQL, [data['recipename']])
@@ -122,5 +130,116 @@ def total_recipe_cal(request):
             if not r:
                 raise ObjectDoesNotExist
             return Response(r)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET','POST'])
+def show_user(request, id):
+    if str(request.user) == "AnonymousUser":
+        return Response(status=status.HTTP_403_FORBIDDEN)
+    try:
+        SQL = "SELECT * FROM User WHERE userId = %s;"
+        if request.method == 'GET':
+            if request.user.userid != id :
+                return Response(status=status.HTTP_403_FORBIDDEN)
+            cursor = connection.cursor()
+            data = request.data
+            cursor.execute(SQL, [id])
+            r = dictfetchall(cursor)
+            if not r:
+                raise ObjectDoesNotExist
+            return Response(r)
+        # elif request.method == 'POST':
+        #     serializer = FoodSerializer(data=request.data)
+        #     serializer.is_valid(raise_exception=True)
+        #     data=serializer.validated_data
+        #     cursor = connection.cursor()
+        #     cursor.execute("INSERT INTO Food VALUES(%s, %s, %s, %s, %s)", [data['foodid'], data['foodname'], data['fat'], data['protein'], data['carb']]) 
+        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET', 'POST'])
+def recipes(request,id):
+    SQL_GET =   """
+                SELECT recipeId, SUM(fat * weight) AS total_fat, SUM(protein * weight) AS total_protein, SUM(carb * weight) AS total_carb
+                FROM createRecipe NATURAL JOIN Recipe NATURAL JOIN UseFood NATURAL JOIN Food
+                WHERE userId = %s
+                GROUP BY recipeId
+                """
+    SQL_POST = "CALL CreateNewRecipe(%s, %s, %s);"
+    try:
+        if request.method == 'GET':
+            cursor = connection.cursor()
+            data = request.data
+            cursor.execute(SQL_GET, [id])
+            r = dictfetchall(cursor)
+            if not r:
+                raise ObjectDoesNotExist
+            return Response(r)            
+        elif request.method == 'POST':
+            print(request.data)
+            cursor = connection.cursor()
+            data = request.data
+            json_file = data["foodWeights"]
+            cursor.execute(SQL_POST, [id, data["recipeName"], json.dumps(json_file)])
+            return Response(status=status.HTTP_201_CREATED)          
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['DELETE'])
+def delete_recipe(request,id, recipeId):
+    try:
+        if request.method == 'DELETE':
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM Recipe Where recipeId = %s;", [recipeId])
+            return Response(status=status.HTTP_204_NO_CONTENT)            
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET', 'POST'])
+def plans(request,id):
+    SQL_GET ="""SELECT planId
+                FROM decide
+                WHERE userId = %s;"""
+    SQL_POST = "CALL CreateNewPlan(%s, %s, %s);"
+    try:
+        if request.method == 'GET':
+            print(request.data)
+            cursor = connection.cursor()
+            data = request.data
+            cursor.execute(SQL_GET, [id])
+            r = dictfetchall(cursor)
+            if not r:
+                raise ObjectDoesNotExist
+            return Response(r)            
+        elif request.method == 'POST':
+            cursor = connection.cursor()
+            data = request.data
+            json_file = data["recipeList"]
+            cursor.execute(SQL_POST, [id, data["userName"], json.dumps(json_file)])
+            return Response(status=status.HTTP_201_CREATED)          
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET','DELETE'])
+def plan_detail(request,id, planId):
+    SQL_GET ="""SELECT c.recipeId
+                FROM decide AS d JOIN WeeklyPlan AS w ON (d.planId = w.planId) JOIN contains AS c ON (w.planId = c.planId)
+                WHERE d.userId = %s AND c.planId = %s;"""
+    try:
+        if request.method == 'GET':
+            print(request.data)
+            cursor = connection.cursor()
+            cursor.execute(SQL_GET, [id, planId])
+            r = dictfetchall(cursor)
+            if not r:
+                raise ObjectDoesNotExist
+            return Response(r)            
+        elif request.method == 'DELETE':
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM WeeklyPlan Where planId = %s;", [planId])
+            return Response(status=status.HTTP_204_NO_CONTENT)            
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
