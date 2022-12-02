@@ -1,12 +1,12 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 const Profile = () => {
-    const [userName, setuserName] = useState("");
-    const [email, setEmail] = useState("");
+    const [userName, setuserName] = useState("No data yet");
+    const [email, setEmail] = useState("No data yet");
     const [age, setAge] = useState(0);
-    const [gender, setGender] = useState("");
+    const [gender, setGender] = useState("No data yet");
     const [calorieRecommand, setCalorieRecommand] = useState(0);
     const history = useHistory();
 
@@ -48,49 +48,17 @@ const Profile = () => {
     
     return ( 
         <div>
-            <form onSubmit={getProfile}>
-            <label>userName: </label>
-                <input 
-                type='text' 
-                name="userName" 
-                required
-                value = {userName}
-                onChange={(e) => setuserName(e.target.value) } 
-                />
-                <label>Email</label>
-                <input 
-                type='text' 
-                name="email" 
-                required
-                value = {email}
-                onChange={(e) => setEmail(e.target.value) } 
-                />
-                <label>Age</label>
-                <input 
-                type='number' 
-                name="age" 
-                required
-                value = {age}
-                onChange={(e) => setAge(e.target.value) } 
-                />
-                <label>Gender</label>
-                <input 
-                type='text' 
-                name="gender" 
-                required
-                value = {gender}
-                onChange={(e) => setGender(e.target.value) } 
-                />
-                <label>calorieRecommand(-1 means fetching failed)</label>
-                <input 
-                type='number' 
-                name="calorieRecommand" 
-                required
-                value = {calorieRecommand}
-                onChange={(e) => setCalorieRecommand(e.target.value) } 
-                />
-                <button>Get Profile Data</button>
-            </form>
+            <h2>userName:</h2>
+            <p>{userName}</p>
+            <h2>email:</h2>
+            <p>{email}</p>
+            <h2>age:</h2>
+            <p>{age}</p>
+            <h2>gender:</h2>
+            <p>{gender}</p>
+            <h2>calorieRecommand,if saw -1, then get data failed:</h2>
+            <p>{calorieRecommand}</p>
+            <button onClick={getProfile}>Get Profile Data</button>
             <button onClick={returnHome}>Back to Home</button>
         </div>
      );
