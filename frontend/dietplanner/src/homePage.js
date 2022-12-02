@@ -7,6 +7,7 @@ const HomePage = () => {
 
     useEffect(()=>{
         fetchRecCalorie();
+        console.log('Data fetched: '+window.calorieRecommand);
     },[]);
 
     const fetchRecCalorie = async () => {
@@ -25,8 +26,6 @@ const HomePage = () => {
                 //set the local value
                 console.log("Calorie GET DONE");
                 window.calorieRecommand = res.data.recommend_cal;
-                console.log('Data fetched: '+window.calorieRecommand);
-                
             }
         })
         .catch(err =>{
