@@ -16,7 +16,6 @@ const Profile = () => {
         history.push("/home");
     }
     //we will fetch data from DB for the first time render this page
-    /*
     const getProfile = async () => {
         console.log("Profile GET INIT");
         await axios.get('http://localhost:8000/planner/users/'+ window.userId +'/', {
@@ -34,6 +33,8 @@ const Profile = () => {
             else{
                 //set the local value
                 console.log("Profile GET DONE");
+                //window.calorieRecommand = res.data.recommend_cal;
+                setCalorieRecommand(res.data.recommend_cal);
                 window.calorieRecommand = res.data.recommend_cal;
                 console.log('Data fetched: '+window.calorieRecommand);
                 
