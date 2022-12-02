@@ -32,18 +32,21 @@ const Profile = () => {
             else{
                 //set the local value
                 console.log("Profile GET DONE");
+                updateValue(res);
                 console.log('username(state)'+userName);
                 
-                setuserName(res.data.username);
-                setEmail(res.data.email);
-                setAge(res.data.age);
-                setGender(res.data.gender);
-                setCalorieRecommand(res.data.recommend_cal);
             }
         })
         .catch(err =>{
             console.log(err)
         });
+    }
+    const updateValue = (res) =>{
+        setuserName(res.data.username);
+        setEmail(res.data.email);
+        setAge(res.data.age);
+        setGender(res.data.gender);
+        setCalorieRecommand(res.data.recommend_cal);
     }
     
     return ( 
