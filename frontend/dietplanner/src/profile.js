@@ -8,6 +8,7 @@ const Profile = () => {
     const [age, setAge] = useState(window.age);
     const [gender, setGender] = useState(window.gender);
     const [calorieRecommand, setCalorieRecommand] = useState(window.calorieRecommand);
+    const [userId, setUserId] = useState(window.userId);
     const history = useHistory();
 
     const returnHome = (e) =>{
@@ -65,6 +66,8 @@ const Profile = () => {
             <p>{age}</p>
             <h2>gender:</h2>
             <p>{gender}</p>
+            <h2>userId:</h2>
+            <p>{userId}</p>
             <h2>calorieRecommand:</h2>
             <p>{calorieRecommand}</p>
             <button onClick={returnHome}>Back to Home</button>
