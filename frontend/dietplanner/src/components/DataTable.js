@@ -20,6 +20,7 @@ const DataTable = (props) => {
     const [_data, setData] = useState([]);//GET data
     const [_recipeName, setRecipeName] = useState("my_recipe");
     const [reset, setReset] = useState(true);
+    const [updateRecipeID, setupdateRecipeID] = useState('');
     useEffect(() => {
         getData();
     },[]);
@@ -74,6 +75,25 @@ const DataTable = (props) => {
         });
         
     }
+    const onUpdateClickedHandler =  async () => {
+        const data = {
+            recipeName : _recipeName,
+            foodWeights : idsAmount
+        };
+        history.push("/recipe");
+        await axios.patch('http://localhost:8000/planner/users/'+window.userId+'/recipes/'+updateRecipeID+'/',data, {
+            headers:{
+                'Authorization': window.token
+            }
+        })
+        .then(res =>{
+            console.log(res)
+        })
+        .catch(err =>{
+            console.log(err)
+        });
+        
+    }
 
     //*****functions*****
     const getData = async () => {
@@ -87,6 +107,19 @@ const DataTable = (props) => {
       };
     
     //*****parts*****
+    const updateField = (
+        <label>
+            Recipe ID(UPDATE ONLY!);
+            <input
+            type = "number"
+            value = {updateRecipeID}
+            onChange = { (e) => {setupdateRecipeID(e.target.value)}}
+            />
+        </label>
+    );//recipe ID to update part
+    const updateButton = (
+        <button onClick={() => (onUpdateClickedHandler())}>UPDATE!</button>
+    )//update button part
     const deleteButton = (
         <button onClick={() => (onDeleteClickedHandler())}>Delete</button>
     );//delete button part
@@ -156,6 +189,8 @@ const DataTable = (props) => {
                     {addButton}
                     {currentSelected}
                     {completeButton}
+                    {updateField}
+                    {updateButton}
             </Box>
         );
     }
