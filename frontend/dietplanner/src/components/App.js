@@ -8,8 +8,10 @@ import HomePage from "../homePage";
 import Profile from "../profile";
 import NavBarFunc from "../navBar";
 import RecipeUpdate from "./RecipeUpdate";
-
+import Plan from "./Plan";
+import WeeklyPlan from "./WeeklyPlan";
 //Global variable to store user info
+
 window.userName = "";
 window.token = "";
 window.userId = -1;
@@ -58,6 +60,18 @@ class App extends React.Component {
               <RecipeHome/>
             </div>
           </Route>
+          <Route exact path = '/plan'>
+            <div>
+              <NavBarFunc />
+              <Plan />
+            </div>
+          </Route>
+          <Route exact path = '/weekly_plan'>
+            <div>
+              <NavBarFunc />
+              <WeeklyPlan />
+            </div>
+          </Route>
           <Route exact path = '/create_recipe'>
             <div>
               <NavBarFunc />
@@ -68,7 +82,6 @@ class App extends React.Component {
       </Router>
     );
   }
-
 }
   
 export default App;
