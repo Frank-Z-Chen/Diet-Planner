@@ -36,8 +36,8 @@ const Profile = () => {
         .then(res=>{
             console.log(res);
             console.log("Update finished");
-            history.push("/profile");
-            //getProfile();
+            //history.push("/profile");
+            getProfile();
             //console.log("recCal calculate finished");
             setProcessing(false);
         })
@@ -63,6 +63,7 @@ const Profile = () => {
             }
             else{
                 //set the local value
+                setCalorieRecommand(res.data[0].recommend_cal);
                 window.calorieRecommand = res.data[0].recommend_cal;
                 window.userName = res.data[0].userName;
                 window.email = res.data[0].email;
