@@ -5,19 +5,19 @@ import request from "./request";
 export default () => {
     const columns = [
         {
-            title: 'recipeName',
+            title: 'Recipe Name',
             dataIndex: 'recipeName',
         },
         {
-            title: 'total_fat',
+            title: 'Total Fat',
             dataIndex: 'total_fat',
         },
         {
-            title: 'total_protein',
+            title: 'Total Protein',
             dataIndex: 'total_protein',
         },
         {
-            title: 'total_carb',
+            title: 'Total Carb',
             dataIndex: 'total_carb',
         },
     ];

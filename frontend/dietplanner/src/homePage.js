@@ -17,13 +17,13 @@ const HomePage = () => {
     }
     return (
         <div className="HomePage">
-            <h2>Manage Food</h2>
+            <h2>Manage Foods</h2>
             <button onClick={goFood}>Go</button>
-            <h2>Manage Plan</h2>
+            <h2>Create Weekly Plan</h2>
             <button onClick={goPlan}>Go</button>
-            <h2>Manage Weekly Plan</h2>
+            <h2>View Weekly Plans</h2>
             <button onClick={goWeeklyPlan}>Go</button>
-            <h2>Manage Recipe</h2>
+            <h2>Manage Recipes</h2>
             <button onClick={goRecipe}>Go</button>
         </div>
      );
