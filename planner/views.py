@@ -152,7 +152,7 @@ def show_user(request, id):
         elif request.method == 'PATCH':
             cursor = connection.cursor()
             data=request.data
-            cursor.execute("UPDATE User SET userName = %s, age = %s, gender = %s, password = %s WHERE userId = %s", [data['userName'], data['age'], data['gender'], data['password'], id]) 
+            cursor.execute("UPDATE User SET userName = %s, age = %s, gender = %s, WHERE userId = %s", [data['userName'], data['age'], data['gender'], id]) 
             return Response(request.data, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
