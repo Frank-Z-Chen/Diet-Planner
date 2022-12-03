@@ -4,7 +4,7 @@ import axios from "axios";
 
 const Profile = () => {
     const [userName, setuserName] = useState(window.userName);
-    const [pwd, setPwd] = useState("");
+    //const [pwd, setPwd] = useState("");
     //const [email, setEmail] = useState(window.email);
     const [age, setAge] = useState(window.age);
     const [gender, setGender] = useState(window.gender);
@@ -21,8 +21,7 @@ const Profile = () => {
         e.preventDefault();
         setProcessing(true);
         const data = {
-            userName:userName, 
-            password:pwd, 
+            userName:userName,
             age:age,
             gender:gender};
         console.log(data);
@@ -64,6 +63,7 @@ const Profile = () => {
             else{
                 //set the local value
                 setCalorieRecommand(res.data[0].recommend_cal);
+                console.log("fetch Calorie: " + calorieRecommand);
                 window.calorieRecommand = res.data[0].recommend_cal;
                 window.userName = res.data[0].userName;
                 window.email = res.data[0].email;
@@ -91,14 +91,6 @@ const Profile = () => {
                 required
                 value = {userName}
                 onChange={(e) => setuserName(e.target.value) } 
-                />
-                <label>password</label>
-                <input 
-                type='text' 
-                name="password" 
-                required
-                value = {pwd}
-                onChange={(e) => setPwd(e.target.value) } 
                 />
                 <label>Age</label>
                 <input 
