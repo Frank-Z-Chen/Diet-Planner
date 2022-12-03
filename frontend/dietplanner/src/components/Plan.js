@@ -26,7 +26,7 @@ export default () => {
     const [updatePlanId, setupdatePlanId] = useState("");
     useEffect(() => {
         setLoading(true);
-        request.get('/planner/users/10000/recipes', 
+        request.get('/planner/users/'+ window.userId+ '/recipes', 
 ).then(res => {
             // console.log(res)
             setData(res.data)
@@ -48,7 +48,7 @@ export default () => {
     };
     const confirm = () => {
          
-        request.post(`/planner/users/10000/plans/`, { userName: 'user1', recipeList: selectedRowKeys }).then(res => {
+        request.post( '/planner/users/'+ window.userId+ '/plans/', { userName: window.userName, recipeList: selectedRowKeys }).then(res => {
             console.log(res)
             message.success('This is a success message');
         })
