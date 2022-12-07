@@ -11,3 +11,22 @@ You should make sure you keep your project root files up-to-date. Information fo
 
 ## Code Contribution
 Individual code contribution will be used to evaluate individual contribution to the project.
+
+
+## Back end
+
+Django 4.1.3
+
+Python 3.11.0
+
+### Set up environment, install packages, and run server:
+
+$ pipenv install django
+
+$ pipenv shell
+
+$ pip install -r requirements.txt
+
+$ python manage.py runserver
+
+## Front-end
