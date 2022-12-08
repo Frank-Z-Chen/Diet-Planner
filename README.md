@@ -32,3 +32,19 @@ $ pip install -r requirements.txt
 $ python manage.py runserver
 
 ## Front-end
+
+Make sure you have the nodejs installed on the machine you are running, if not, download from nodejs.org
+
+Then go into  .\fa22-cs411-Q-team025-4846\frontend\dietplanner
+
+Open terminal, and run the following command:
+
+$npm install
+
+To open up a local develop server, enter 
+
+$npm run start 
+
+or
+
+$npm start 
