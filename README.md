@@ -39,12 +39,12 @@ Then go into  .\fa22-cs411-Q-team025-4846\frontend\dietplanner
 
 Open terminal, and run the following command:
 
-$npm install
+$ npm install
 
 To open up a local develop server, enter 
 
-$npm run start 
+$ npm run start 
 
 or
 
-$npm start 
+$ npm start 
