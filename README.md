@@ -21,6 +21,8 @@ Python 3.11.0
 
 ### Set up environment, install packages, and run server:
 
+At root folder .\fa22-cs411-Q-team025-4846
+
 $ pipenv install django
 
 $ pipenv shell
